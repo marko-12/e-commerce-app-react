@@ -23,9 +23,9 @@ const reducer = (state, action) => {
     case "REFRESH_PRODUCT":
       return {
         ...state,
-        product: action.payload[0],
-        reviews: action.payload[1],
-        users: action.payload[2],
+        //product: action.payload[0],
+        reviews: action.payload,
+        //users: action.payload[2],
       };
     case "FETCH_REQUEST":
       return { ...state, loading: true };
@@ -115,13 +115,16 @@ function ProductScreen() {
       dispatch({
         type: "CREATE_SUCCESS",
       });
-      toast.success("Review submitted successfully");
-      console.log(data);
-      // product.reviews.unshift(data[0]);
-      // product.num_of_reviews = data[1];
-      // product.rating = data[2];
-      // console.log(product.name);
-      // dispatch({ type: "REFRESH_PRODUCT", payload: product });
+
+      toast.success(data.message);
+      try {
+        const result = await axios.get(`/api/products/${id}`);
+        dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+        console.log(result.data[2]);
+      } catch (err) {
+        dispatch({ type: "FETCH_FAIL", payload: getError(err) });
+      }
+
       window.scrollTo({
         behavior: "smooth",
         top: reviewsRef.current.offsetTop,
@@ -229,14 +232,17 @@ function ProductScreen() {
           )}
         </div>
         <ListGroup>
-          {reviews.map((review) => (
-            <ListGroup.Item key={review.id}>
-              <strong>{review.user_id}</strong>
-              <Rating rating={review.rating} caption=" "></Rating>
-              <p>{review.created_at.substring(0, 10)}</p>
-              <p>{review.comment}</p>
-            </ListGroup.Item>
-          ))}
+          {reviews.map((review) => {
+            const user = users.find((user) => user.id === review.user_id);
+            return (
+              <ListGroup.Item key={review.id}>
+                <strong>{user ? user.name : ""}</strong>
+                <Rating rating={review.rating} caption=" "></Rating>
+                <p>{review.created_at.substring(0, 10)}</p>
+                <p>{review.comment}</p>
+              </ListGroup.Item>
+            );
+          })}
         </ListGroup>
         <div className="my-3">
           {userInfo ? (
