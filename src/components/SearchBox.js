@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
-import { blue, red } from "@mui/material/colors";
 
 export default function SearchBox() {
   const navigate = useNavigate();
@@ -18,32 +17,71 @@ export default function SearchBox() {
     const query = e.target.value;
     navigate(query ? `/search/?query=${query}` : "/search");
   };
-  const search = () => {
-    searchHandler();
-  };
+
   const [myOptions, setMyOptions] = useState([]);
+
+  // function getData() {
+  //   // fetch data
+  //   fetch("api/products")
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((res) => {
+  //       for (var i = 0; i < res.length; i++) {
+  //         if (!myOptions.some((obj) => obj.label == res[i].name)) {
+  //           // create an object with a label
+  //           let object = {
+  //             label: res[i].name,
+  //             usersName: res[i].name,
+  //           };
+  //           myOptions.push(object);
+  //         }
+  //       }
+  //       setMyOptions(myOptions);
+  //     });
+  // }
 
   function getData() {
     // fetch data
-    fetch("api/products")
-      .then((response) => {
-        return response.json();
-      })
-      .then((res) => {
-        for (var i = 0; i < res.length; i++) {
-          if (!myOptions.some((obj) => obj.label == res[i].name)) {
-            // create an object with a label
-            let object = {
-              label: res[i].name,
-              usersName: res[i].name,
-            };
-            myOptions.push(object);
-          }
-        }
-        setMyOptions(myOptions);
-      });
+    const res = axios.get("api/products");
+
+    for (var i = 0; i < res.length; i++) {
+      if (!myOptions.some((obj) => obj.label === res[i].name)) {
+        // create an object with a label
+        let object = {
+          label: res[i].name,
+          usersName: res[i].name,
+        };
+        myOptions.push(object);
+      }
+    }
+    setMyOptions(myOptions);
   }
-  useEffect(() => getData(), [myOptions]);
+
+  // function getData() {
+  //   // fetch data
+  //   axios
+  //     .get("api/products")
+  //     .then((response) => {
+  //       return response.data;
+  //     })
+  //     .then((res) => {
+  //       for (var i = 0; i < res.length; i++) {
+  //         if (!myOptions.some((obj) => obj.label == res[i].name)) {
+  //           // create an object with a label
+  //           let object = {
+  //             label: res[i].name,
+  //             usersName: res[i].name,
+  //           };
+  //           myOptions.push(object);
+  //         }
+  //       }
+  //       setMyOptions(myOptions);
+  //       console.log(myOptions);
+  //     });
+  // }
+
+  useEffect(() => getData, [myOptions]);
   //useEffect(() => search(), [query]);
   return (
     // <Form className="d-flex me-auto">

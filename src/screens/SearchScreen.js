@@ -92,9 +92,12 @@ export default function SearchScreen() {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          `/api/search?page=${page}&query=${query}&category=${category}&price=${price}&rating=${rating}&order=${order}`
+          `/api/search?page=${page}&name=${query}&category=${category}&price=${price}&rating=${rating}&order=${order}`
         );
+        console.log(data);
+
         dispatch({ type: "FETCH_SUCCESS", payload: data });
+        console.log(category);
       } catch (err) {
         dispatch({
           type: "FETCH_FAIL",

@@ -120,7 +120,6 @@ function ProductScreen() {
       try {
         const result = await axios.get(`/api/products/${id}`);
         dispatch({ type: "FETCH_SUCCESS", payload: result.data });
-        console.log(result.data[2]);
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
