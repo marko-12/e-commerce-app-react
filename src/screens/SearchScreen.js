@@ -12,6 +12,8 @@ import MessageBox from "../components/MessageBox";
 import Button from "react-bootstrap/Button";
 import Product from "../components/Product";
 import LinkContainer from "react-router-bootstrap/LinkContainer";
+import ReactSlider from "react-slider";
+import { wait } from "@testing-library/user-event/dist/utils";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -33,21 +35,6 @@ const reducer = (state, action) => {
       return state;
   }
 };
-
-const prices = [
-  {
-    name: "$1 to $50",
-    value: "1-50",
-  },
-  {
-    name: "$51 to $200",
-    value: "51-200",
-  },
-  {
-    name: "$201 to $1000",
-    value: "201-1000",
-  },
-];
 
 export const ratings = [
   {
@@ -76,8 +63,9 @@ export default function SearchScreen() {
   const { search } = useLocation();
   const sp = new URLSearchParams(search); // /search?category=Shirts
   const category = sp.get("category") || "all";
-  const query = sp.get("query") || "all";
-  const price = sp.get("price") || "all";
+  const name = sp.get("query") || "all";
+  const priceFrom = sp.get("priceFrom") || "all";
+  const priceTo = sp.get("priceTo") || "all";
   const rating = sp.get("rating") || "all";
   const order = sp.get("order") || "newest";
   const page = sp.get("page") || 1;
@@ -91,13 +79,35 @@ export default function SearchScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
-          `/api/search?page=${page}&name=${query}&category=${category}&price=${price}&rating=${rating}&order=${order}`
-        );
-        console.log(data);
+        const queryParams = {
+          page: page,
+          name: name,
+          category: category,
+          priceFrom: priceFrom,
+          priceTo: priceTo,
+          rating: rating,
+          //order: order,
+        };
+        var queryString = "";
+
+        for (const [key, value] of Object.entries(queryParams)) {
+          if (value && value !== "all") {
+            if (key === "page") {
+              queryString = queryString.concat(`${key}=${value}`);
+            } else {
+              queryString = queryString.concat(`&${key}=${value}`);
+            }
+          }
+        }
+        console.log(queryString);
+
+        // const { data } = await axios.get(
+        //   `/api/search?page=${page}&name=${name}&category=${category}&price=${price}&rating=${rating}&order=${order}`
+        // );
+        const { data } = await axios.get(`/api/search?${queryString}`);
+        console.log(queryParams.priceTo);
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
-        console.log(category);
       } catch (err) {
         dispatch({
           type: "FETCH_FAIL",
@@ -106,7 +116,7 @@ export default function SearchScreen() {
       }
     };
     fetchData();
-  }, [category, error, order, page, price, query, rating]);
+  }, [category, error, order, page, priceFrom, priceTo, name, rating]);
 
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -121,16 +131,19 @@ export default function SearchScreen() {
     fetchCategories();
   }, [dispatch]);
 
+  const [sliderValue, setSliderValue] = useState([]);
+
   const getFilterUrl = (filter, skipPathname) => {
     const filterPage = filter.page || page;
     const filterCategory = filter.category || category;
-    const filterQuery = filter.query || query;
+    const filterQuery = filter.name || name;
     const filterRating = filter.rating || rating;
-    const filterPrice = filter.price || price;
+    const filterPriceFrom = filter.priceFrom || priceFrom;
+    const filterPriceTo = filter.priceTo || priceTo;
     const sortOrder = filter.order || order;
     return `${
       skipPathname ? "" : "/search?"
-    }category=${filterCategory}&query=${filterQuery}&price=${filterPrice}&rating=${filterRating}&order=${sortOrder}&page=${filterPage}`;
+    }category=${filterCategory}&query=${filterQuery}&priceFrom=${filterPriceFrom}&priceTo=${filterPriceTo}&rating=${filterRating}&order=${sortOrder}&page=${filterPage}`;
   };
   return (
     <div>
@@ -164,7 +177,7 @@ export default function SearchScreen() {
           </div>
           <div>
             <h3>Price</h3>
-            <ul>
+            {/* <ul>
               <li>
                 <Link
                   className={"all" === price ? "text-bold" : ""}
@@ -183,7 +196,52 @@ export default function SearchScreen() {
                   </Link>
                 </li>
               ))}
-            </ul>
+            </ul> */}
+            <ReactSlider
+              className="horizontal-slider"
+              thumbClassName="thumb"
+              trackClassName="track-class"
+              defaultValue={[1, 1000]}
+              max={1000}
+              min={1}
+              renderThumb={(props, state) => (
+                <div {...props}>{state.valueNow}</div>
+              )}
+              onChange={(value) => setSliderValue(value)}
+              onAfterChange={(value) =>
+                navigate(
+                  value
+                    ? getFilterUrl({
+                        priceFrom: value[0],
+                        priceTo: value[1],
+                      })
+                    : "/search"
+                )
+              }
+            />
+            <br />
+            <br />
+            <div
+              style={{
+                backgroundColor: "#f0c040",
+                borderRadius: "7px",
+              }}
+            >
+              Show prices from {sliderValue[0]} to {sliderValue[1]}
+            </div>
+            <br />
+            {/* <Link
+              style={{
+                backgroundColor: "#f0c040",
+                borderRadius: "7px",
+              }}
+              to={getFilterUrl({
+                priceFrom: sliderValue[0],
+                priceTo: sliderValue[1],
+              })}
+            >
+              Search Prices
+            </Link> */}
           </div>
           <div>
             <h3>Avg. Customer Review</h3>
@@ -220,14 +278,16 @@ export default function SearchScreen() {
                 <Col md={6}>
                   <div>
                     {countProducts === 0 ? "No" : countProducts} Results
-                    {query !== "all" && " : " + query}
+                    {name !== "all" && " : " + name}
                     {category !== "all" && " : " + category}
-                    {price !== "all" && " : Price " + price}
+                    {priceFrom !== "all" &&
+                      priceFrom !== "all" &&
+                      " : Price From " + priceFrom + "$ to " + priceTo + "$"}
                     {rating !== "all" && " : Rating " + rating + " & up"}
-                    {query !== "all" ||
+                    {name !== "all" ||
                     category !== "all" ||
                     rating !== "all" ||
-                    price !== "all" ? (
+                    priceFrom !== "all" ? (
                       <Button
                         variant="light"
                         onClick={() => navigate("/search")}

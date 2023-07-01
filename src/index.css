@@ -125,3 +125,12 @@ main {
 button.thumbnail {
   padding: 0;
 }
+.track-class {
+  background-color: #ffc000;
+  color: #f0c040;
+}
+.thumb {
+  background-color: #ffc000;
+  color: #000000;
+  border-radius: 7px;
+}

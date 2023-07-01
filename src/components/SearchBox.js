@@ -8,14 +8,27 @@ import { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 export default function SearchBox() {
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const category = sp.get("category") || "all";
+  const priceFrom = sp.get("priceFrom") || "all";
+  const priceTo = sp.get("priceTo") || "all";
+  const rating = sp.get("rating") || "all";
+  const order = sp.get("order") || "newest";
+  const page = sp.get("page") || 1;
   //const [query, setQuery] = useState("");
   const searchHandler = (e) => {
     e.preventDefault();
     const query = e.target.value;
-    navigate(query ? `/search/?query=${query}` : "/search");
+    navigate(
+      query
+        ? `/search/?category=${category}&query=${query}&priceFrom=${priceFrom}&priceTo=${priceTo}&rating=${rating}&order=${order}&page=${page}`
+        : "/search"
+    );
   };
 
   const [myOptions, setMyOptions] = useState([]);
