@@ -98,13 +98,11 @@ export default function SearchScreen() {
             }
           }
         }
-        console.log(queryString);
 
         // const { data } = await axios.get(
         //   `/api/search?page=${page}&name=${name}&category=${category}&price=${price}&rating=${rating}&order=${order}`
         // );
         const { data } = await axios.get(`/api/search?${queryString}`);
-        console.log(data);
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {

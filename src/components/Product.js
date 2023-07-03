@@ -5,6 +5,7 @@ import Rating from "./Rating";
 import axios from "axios";
 import { useContext } from "react";
 import { Store } from "../Store";
+import { toast } from "react-toastify";
 
 function Product(props) {
   const { product } = props;
@@ -15,11 +16,12 @@ function Product(props) {
   } = state;
 
   const addToCartHandler = async (item) => {
-    const existItem = cartItems.find((x) => x._id === product._id);
+    const existItem = cartItems.find((x) => x.id === product.id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${item._id}`);
-    if (data.countInStock < quantity) {
-      window.alert("Sorry. Product is out of stock");
+    const { data } = await axios.get(`/api/products/${item.id}`);
+    if (data[0].count_in_stock < quantity) {
+      //window.alert("Sorry. Product is out of stock");
+      toast.error("Sorry the product is out of stock");
       return;
     }
     ctxDispatch({
@@ -31,7 +33,12 @@ function Product(props) {
   return (
     <Card>
       <Link to={`/product/${product.id}`}>
-        <img src={product.image} className="card-img-top" alt={product.name} />
+        <img
+          src={`https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg`}
+          //src={product.image}
+          className="card-img-top"
+          alt={product.name}
+        />
       </Link>
       <Card.Body>
         <Link to={`/product/${product.id}`}>
@@ -42,7 +49,7 @@ function Product(props) {
           num_of_reviews={product.num_of_reviews}
         />
         <Card.Text>${product.price}</Card.Text>
-        {product.countInStock === 0 ? (
+        {product.count_in_stock === 0 ? (
           <Button variant="light" disabled>
             Out of stock
           </Button>

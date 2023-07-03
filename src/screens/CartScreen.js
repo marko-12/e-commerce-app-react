@@ -5,6 +5,7 @@ import { Row, Col, ListGroup, Button, Card } from "react-bootstrap";
 import MessageBox from "../components/MessageBox";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function CartScreen() {
   const navigate = useNavigate();
@@ -14,9 +15,10 @@ export default function CartScreen() {
   } = state;
 
   const updateCartHandler = async (item, quantity) => {
-    const { data } = await axios.get(`/api/products/${item._id}`);
-    if (data.countInStock < quantity) {
-      window.alert("Sorry. Product is out of stock");
+    const { data } = await axios.get(`/api/products/${item.id}`);
+    if (data[0].count_in_stock < quantity) {
+      //window.alert("Sorry. Product is out of stock");
+      toast.error("Sorry the product is out of stock");
       return;
     }
     ctxDispatch({
@@ -55,7 +57,7 @@ export default function CartScreen() {
                         alt={item.name}
                         className="img-fluid rounded img-thumbnail"
                       ></img>{" "}
-                      <Link to={`/product/${item.slug}`}>{item.name}</Link>
+                      <Link to={`/product/${item.id}`}>{item.name}</Link>
                     </Col>
                     <Col md={3}>
                       <Button

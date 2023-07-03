@@ -20,6 +20,7 @@ export default function SearchBox() {
   const rating = sp.get("rating") || "all";
   const order = sp.get("order") || "newest";
   const page = sp.get("page") || 1;
+
   //const [query, setQuery] = useState("");
   const searchHandler = (e) => {
     e.preventDefault();
@@ -126,7 +127,7 @@ export default function SearchBox() {
             {...data}
             variant="outlined"
             label="Search Products"
-            onChange={searchHandler}
+            onChange={(e) => searchHandler(e)}
             //={searchHandler}
           />
         )}
