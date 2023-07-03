@@ -13,7 +13,6 @@ import Button from "react-bootstrap/Button";
 import Product from "../components/Product";
 import LinkContainer from "react-router-bootstrap/LinkContainer";
 import ReactSlider from "react-slider";
-import { wait } from "@testing-library/user-event/dist/utils";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -22,9 +21,9 @@ const reducer = (state, action) => {
     case "FETCH_SUCCESS":
       return {
         ...state,
-        products: action.payload.products,
-        page: action.payload.page,
-        pages: action.payload.pages,
+        products: action.payload.products.data,
+        page: action.payload.products.from,
+        pages: action.payload.products.last_page,
         countProducts: action.payload.countProducts,
         loading: false,
       };
@@ -105,7 +104,7 @@ export default function SearchScreen() {
         //   `/api/search?page=${page}&name=${name}&category=${category}&price=${price}&rating=${rating}&order=${order}`
         // );
         const { data } = await axios.get(`/api/search?${queryString}`);
-        console.log(queryParams.priceTo);
+        console.log(data);
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
@@ -331,7 +330,7 @@ export default function SearchScreen() {
                     className="mx-1"
                     to={{
                       pathname: "/search",
-                      seacrh: getFilterUrl({ page: x + 1 }, true),
+                      search: getFilterUrl({ page: x + 1 }, true),
                     }}
                   >
                     <Button

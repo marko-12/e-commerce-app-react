@@ -47,7 +47,7 @@ function HomeScreen() {
       <Helmet>
         <title>Home Screen</title>
       </Helmet>
-      <h1>Featured Products</h1>
+      <h1 style={{ textAlign: "center" }}>Current Products</h1>
       <div className="products">
         {loading ? (
           <LoadingBox />
