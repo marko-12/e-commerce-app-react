@@ -25,6 +25,7 @@ const reducer = (state, action) => {
         page: action.payload.products.from,
         pages: action.payload.products.last_page,
         countProducts: action.payload.countProducts,
+        totalProducts: action.payload.products.total,
         loading: false,
       };
     case "FETCH_FAIL":
@@ -69,11 +70,14 @@ export default function SearchScreen() {
   const order = sp.get("order") || "newest";
   const page = sp.get("page") || 1;
 
-  const [{ loading, error, products, pages, countProducts }, dispatch] =
-    useReducer(reducer, {
-      loading: true,
-      error: "",
-    });
+  const [
+    { loading, error, products, pages, countProducts, totalProducts },
+    dispatch,
+  ] = useReducer(reducer, {
+    loading: true,
+    error: "",
+  });
+  //countProducts je zapravo products per page, totalProducts je ukupan broj proizvoda
 
   useEffect(() => {
     const fetchData = async () => {
@@ -149,7 +153,7 @@ export default function SearchScreen() {
       </Helmet>
       <Row>
         <Col md={3}>
-          <h3>Department</h3>
+          <h3>Category</h3>
           <div>
             <ul>
               <li>
@@ -197,7 +201,7 @@ export default function SearchScreen() {
             <ReactSlider
               className="horizontal-slider"
               thumbClassName="thumb"
-              trackClassName="track-class"
+              trackClassName="track"
               defaultValue={[1, 1000]}
               max={1000}
               min={1}
@@ -241,7 +245,7 @@ export default function SearchScreen() {
             </Link> */}
           </div>
           <div>
-            <h3>Avg. Customer Review</h3>
+            <h3>Average Customer Review</h3>
             <ul>
               {ratings.map((r) => (
                 <li key={r.name}>
@@ -274,7 +278,7 @@ export default function SearchScreen() {
               <Row className="justify-content-between mb-3">
                 <Col md={6}>
                   <div>
-                    {countProducts === 0 ? "No" : countProducts} Results
+                    {totalProducts === 0 ? "No" : totalProducts} Results
                     {name !== "all" && " : " + name}
                     {category !== "all" && " : " + category}
                     {priceFrom !== "all" &&
@@ -292,6 +296,12 @@ export default function SearchScreen() {
                         <i className="fas fa-times-circle"></i>
                       </Button>
                     ) : null}
+                  </div>
+                  <br />
+                  <div>
+                    {countProducts && countProducts > 0
+                      ? `Showing ${countProducts} per page`
+                      : null}
                   </div>
                 </Col>
                 <Col className="text-end">

@@ -125,12 +125,15 @@ main {
 button.thumbnail {
   padding: 0;
 }
-.track-class {
+.track {
   background-color: #ffc000;
   color: #f0c040;
 }
 .thumb {
   background-color: #ffc000;
   color: #000000;
-  border-radius: 7px;
+  border-radius: 10px;
+}
+.horizontal-slider {
+  left: -7px;
 }
