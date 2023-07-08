@@ -36,48 +36,9 @@ export default function SearchBox() {
 
   // function getData() {
   //   // fetch data
-  //   fetch("api/products")
+  //   fetch("/api/products")
   //     .then((response) => {
   //       return response.json();
-  //     })
-  //     .then((res) => {
-  //       for (var i = 0; i < res.length; i++) {
-  //         if (!myOptions.some((obj) => obj.label == res[i].name)) {
-  //           // create an object with a label
-  //           let object = {
-  //             label: res[i].name,
-  //             usersName: res[i].name,
-  //           };
-  //           myOptions.push(object);
-  //         }
-  //       }
-  //       setMyOptions(myOptions);
-  //     });
-  // }
-
-  function getData() {
-    // fetch data
-    const res = axios.get("api/products");
-
-    for (var i = 0; i < res.length; i++) {
-      if (!myOptions.some((obj) => obj.label === res[i].name)) {
-        // create an object with a label
-        let object = {
-          label: res[i].name,
-          usersName: res[i].name,
-        };
-        myOptions.push(object);
-      }
-    }
-    setMyOptions(myOptions);
-  }
-
-  // function getData() {
-  //   // fetch data
-  //   axios
-  //     .get("api/products")
-  //     .then((response) => {
-  //       return response.data;
   //     })
   //     .then((res) => {
   //       for (var i = 0; i < res.length; i++) {
@@ -94,6 +55,45 @@ export default function SearchBox() {
   //       console.log(myOptions);
   //     });
   // }
+
+  // function getData() {
+  //   // fetch data
+  //   const res = axios.get("/api/products");
+
+  //   for (var i = 0; i < res.length; i++) {
+  //     if (!myOptions.some((obj) => obj.label === res[i].name)) {
+  //       // create an object with a label
+  //       let object = {
+  //         label: res[i].name,
+  //         usersName: res[i].name,
+  //       };
+  //       myOptions.push(object);
+  //     }
+
+  //     setMyOptions(myOptions);
+  //     console.log(myOptions);
+  //   }
+  // }
+
+  async function getData() {
+    // fetch data
+    const response = await axios.get("/api/products");
+    const res = await response.data;
+    (async () => {
+      for (var i = 0; i < res.length; i++) {
+        if (!myOptions.some((obj) => obj.label == res[i].name)) {
+          // create an object with a label
+          let object = {
+            label: res[i].name,
+            usersName: res[i].name,
+          };
+          myOptions.push(object);
+        }
+      }
+      setMyOptions(myOptions);
+      console.log(myOptions);
+    })();
+  }
 
   useEffect(() => getData, [myOptions]);
   //useEffect(() => search(), [query]);
@@ -120,6 +120,7 @@ export default function SearchBox() {
         autoComplete
         autoHighlight
         freeSolo
+        search
         clearOnEscape
         options={myOptions}
         renderInput={(data) => (
@@ -128,7 +129,7 @@ export default function SearchBox() {
             variant="outlined"
             label="Search Products"
             onChange={(e) => searchHandler(e)}
-            //={searchHandler}
+            onSelect={(e) => searchHandler(e)}
           />
         )}
       />

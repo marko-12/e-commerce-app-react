@@ -18,9 +18,9 @@ const reducer = (state, action) => {
     case "FETCH_SUCCESS":
       return {
         ...state,
-        products: action.payload.products,
-        page: action.payload.page,
-        pages: action.payload.pages,
+        products: action.payload.data,
+        page: action.payload.from,
+        pages: action.payload.last_page,
         loading: false,
       };
     case "FETCH_FAIL":
@@ -81,10 +81,13 @@ export default function ProductListScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(`/api/products/admin?page=${page} `, {
-          //const { data } = await axios.get(`/api/products/`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
+        //const { data } = await axios.get(`/api/products/admin?page=${page} `, {
+        const { data } = await axios.get(
+          `/api/products_paginated/?page=${page}`,
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {}
@@ -94,7 +97,6 @@ export default function ProductListScreen() {
       dispatch({ type: "DELETE_RESET" });
     } else {
       fetchData();
-      console.log(products);
     }
   }, [page, userInfo, successDelete]);
 
@@ -125,12 +127,12 @@ export default function ProductListScreen() {
   };
 
   const deleteHandler = async (product) => {
-    if (window.confirm("Are you sure to delete?")) {
+    if (window.confirm("Are you sure you want to delete?")) {
       try {
-        await axios.delete(`/api/products/${product._id}`, {
+        await axios.delete(`/api/products/${product.id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success("product deleted successfully");
+        toast.success("Product deleted successfully");
         dispatch({ type: "DELETE_SUCCESS" });
       } catch (err) {
         toast.error(getError(error));

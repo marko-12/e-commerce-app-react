@@ -55,12 +55,11 @@ export default function ProductEditScreen() {
     });
 
   const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState("");
-  const [countInStock, setCountInStock] = useState("");
+  const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
 
@@ -69,15 +68,14 @@ export default function ProductEditScreen() {
       try {
         dispatch({ type: "FETCH_REQUEST" });
         const { data } = await axios.get(`/api/products/${productId}`);
-        setName(data.name);
-        setSlug(data.slug);
-        setPrice(data.price);
-        setImage(data.image);
-        setImages(data.images);
-        setCategory(data.category);
-        setCountInStock(data.countInStock);
-        setBrand(data.brand);
-        setDescription(data.description);
+        setName(data[0].name);
+        setPrice(data[0].price);
+        setImage(data[0].image);
+        setImages(data[0].images);
+        setCategory(data[0].category);
+        setCountInStock(data[0].count_in_stock);
+        setBrand(data[0].brand);
+        setDescription(data[0].description);
         dispatch({ type: "FETCH_SUCCESS" });
       } catch (err) {
         dispatch({
@@ -93,18 +91,17 @@ export default function ProductEditScreen() {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      await axios.put(
+      await axios.patch(
         `/api/products/${productId}`,
         {
-          _id: productId,
+          id: productId,
           name,
-          slug,
           price,
           image,
           images,
           category,
           brand,
-          countInStock,
+          count_in_stock,
           description,
         },
         {
@@ -156,9 +153,9 @@ export default function ProductEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Product ${productId}</title>
+        <title>Edit Product ${name}</title>
       </Helmet>
-      <h1>Edit Product {productId}</h1>
+      <h1>Edit Product {name}</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -174,14 +171,14 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="slug">
+          {/* <Form.Group className="mb-3" controlId="slug">
             <Form.Label>Slug</Form.Label>
             <Form.Control
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
               required
             />
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Price</Form.Label>
             <Form.Control
@@ -204,7 +201,7 @@ export default function ProductEditScreen() {
             {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="additionalImage">
+          {/* <Form.Group className="mb-3" controlId="additionalImage">
             <Form.Label>Additional Images</Form.Label>
             {images.length === 0 && <MessageBox>No image</MessageBox>}
             <ListGroup variant="flush">
@@ -217,7 +214,7 @@ export default function ProductEditScreen() {
                 </ListGroup.Item>
               ))}
             </ListGroup>
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group className="mb-3" controlId="additionalImageFile">
             <Form.Label>Upload Aditional Image</Form.Label>
             <Form.Control
@@ -246,7 +243,7 @@ export default function ProductEditScreen() {
           <Form.Group className="mb-3" controlId="countInStock">
             <Form.Label>Count In Stock</Form.Label>
             <Form.Control
-              value={countInStock}
+              value={count_in_stock}
               onChange={(e) => setCountInStock(e.target.value)}
               required
             />

@@ -228,7 +228,7 @@ export default function SearchScreen() {
                 borderRadius: "7px",
               }}
             >
-              Show prices from {sliderValue[0]} to {sliderValue[1]}
+              Show prices from {sliderValue[0]}$ to {sliderValue[1]}$
             </div>
             <br />
             {/* <Link
@@ -325,7 +325,7 @@ export default function SearchScreen() {
 
               <Row>
                 {products.map((product) => (
-                  <Col sm={6} lg={4} className="mb-3" key={product._id}>
+                  <Col sm={6} lg={4} className="mb-3" key={product.id}>
                     <Product product={product}></Product>
                   </Col>
                 ))}

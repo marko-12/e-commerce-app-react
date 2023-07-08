@@ -133,14 +133,15 @@ button.thumbnail {
   background: #fcc000;
 }
 .horizontal-slider .track {
-  top: 20px;
-  height: 4px;
+  top: 12px;
+  height: 18px;
 }
 .thumb {
   background-color: #fcc000;
   color: #000000;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 8px;
+  border: 1px solid;
 }
 .horizontal-slider {
   left: -7px;
