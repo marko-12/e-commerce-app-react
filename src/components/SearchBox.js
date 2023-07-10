@@ -91,7 +91,6 @@ export default function SearchBox() {
         }
       }
       setMyOptions(myOptions);
-      console.log(myOptions);
     })();
   }
 

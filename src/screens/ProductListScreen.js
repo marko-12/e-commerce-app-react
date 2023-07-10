@@ -101,7 +101,7 @@ export default function ProductListScreen() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-    if (window.confirm("Are you sure to create?")) {
+    if (window.confirm("Are you sure you want to create a new product?")) {
       try {
         // dispatch({ type: "CREATE_REQUEST" });
         // const { data } = await axios.post(
@@ -186,7 +186,7 @@ export default function ProductListScreen() {
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
-                  <td>{product.price}</td>
+                  <td>{product.price}$</td>
                   <td>{product.category}</td>
                   <td>{product.brand}</td>
                   <td>

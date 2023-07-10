@@ -18,14 +18,14 @@ export default function ProductCreateScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const user_id = userInfo.id;
 
   const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState("");
-  const [countInStock, setCountInStock] = useState("");
+  const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
 
@@ -79,14 +79,14 @@ export default function ProductCreateScreen() {
         "/api/products",
         {
           name,
-          slug,
           price,
           image,
           images,
           category,
           brand,
-          countInStock,
+          count_in_stock,
           description,
+          user_id,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -143,20 +143,13 @@ export default function ProductCreateScreen() {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="slug">
-          <Form.Label>Slug</Form.Label>
-          <Form.Control
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            required
-          />
-        </Form.Group>
         <Form.Group className="mb-3" controlId="name">
           <Form.Label>Price</Form.Label>
           <Form.Control
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
+            type="number"
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="image">
@@ -213,9 +206,10 @@ export default function ProductCreateScreen() {
         <Form.Group className="mb-3" controlId="countInStock">
           <Form.Label>Count In Stock</Form.Label>
           <Form.Control
-            value={countInStock}
+            value={count_in_stock}
             onChange={(e) => setCountInStock(e.target.value)}
             required
+            type="number"
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="description">
