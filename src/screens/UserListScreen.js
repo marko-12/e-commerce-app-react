@@ -71,13 +71,13 @@ export default function UserListScreen() {
   }, [userInfo, successDelete]);
 
   const deleteHandler = async (user) => {
-    if (window.confirm("Are you sure to delete?")) {
+    if (window.confirm("Are you sure you want to delete the user?")) {
       try {
         dispatch({ type: "DELETE_REQUEST" });
-        await axios.delete(`/api/users/${user._id}`, {
+        const { data } = await axios.delete(`/api/users/${user.id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success("user deleted successfully");
+        toast.success(data.message);
         dispatch({ type: "DELETE_SUCCESS" });
       } catch (error) {
         toast.error(getError(error));
@@ -112,8 +112,8 @@ export default function UserListScreen() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user._id}</td>
+              <tr key={user.id}>
+                <td>{user.id}</td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.isAdmin ? "YES" : "NO"}</td>
@@ -121,7 +121,7 @@ export default function UserListScreen() {
                   <Button
                     type="button"
                     variant="light"
-                    onClick={() => navigate(`/admin/user/${user._id}`)}
+                    onClick={() => navigate(`/admin/user/${user.id}`)}
                   >
                     Edit
                   </Button>

@@ -110,6 +110,9 @@ function App() {
                       <LinkContainer to="/orderhistory">
                         <NavDropdown.Item>Order History</NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/reset-password">
+                        <NavDropdown.Item>Reset Password</NavDropdown.Item>
+                      </LinkContainer>
                       <NavDropdown.Divider />
                       <Link
                         className="dropdown-item"
@@ -172,7 +175,6 @@ function App() {
           <Container className="mt-3">
             <Routes>
               <Route path="/product/:id" element={<ProductScreen />} />
-              {/*promenjeno iz slug u id  */}
               <Route path="/cart" element={<CartScreen />} />
               <Route path="/search" element={<SearchScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
@@ -182,7 +184,7 @@ function App() {
                 element={<ForgetPasswordScreen />}
               />
               <Route
-                path="/reset-password/:token"
+                path="/reset-password" //sklonjen :token
                 element={<ResetPasswordScreen />}
               />
 

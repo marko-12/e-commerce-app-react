@@ -92,7 +92,7 @@ export default function ProductCreateScreen() {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         }
       );
-      toast.success("Product created successfully");
+      toast.success(data.message);
       navigate("/admin/products");
     } catch (err) {
       toast.error(getError(err));

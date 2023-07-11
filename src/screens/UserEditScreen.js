@@ -45,10 +45,10 @@ export default function UserEditScreen() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         dispatch({ type: "FETCH_REQUEST" });
         const { data } = await axios.get(`/api/users/${userId}`, {
@@ -64,17 +64,17 @@ export default function UserEditScreen() {
           payload: getError(err),
         });
       }
-    };
-    fetchData();
+    })();
+    //fetchData();
   }, [userId, userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      await axios.put(
+      const { data } = await axios.patch(
         `/api/users/${userId}`,
-        { _id: userId, name, email, isAdmin },
+        { id: userId, name, email, isAdmin },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         }
@@ -82,7 +82,7 @@ export default function UserEditScreen() {
       dispatch({
         type: "UPDATE_SUCCESS",
       });
-      toast.success("User updated successfully");
+      toast.success(data.message);
       navigate("/admin/users");
     } catch (error) {
       toast.error(getError(error));
@@ -92,9 +92,9 @@ export default function UserEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit User ${userId}</title>
+        <title>Edit User {name}</title>
       </Helmet>
-      <h1>Edit User {userId}</h1>
+      <h1>Edit User {name}</h1>
 
       {loading ? (
         <LoadingBox></LoadingBox>
@@ -108,6 +108,7 @@ export default function UserEditScreen() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              disabled
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="email">
@@ -117,6 +118,7 @@ export default function UserEditScreen() {
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled
             />
           </Form.Group>
 
@@ -124,7 +126,7 @@ export default function UserEditScreen() {
             className="mb-3"
             type="checkbox"
             id="isAdmin"
-            label="isAdmin"
+            label="is Admin"
             checked={isAdmin}
             onChange={(e) => setIsAdmin(e.target.checked)}
           />

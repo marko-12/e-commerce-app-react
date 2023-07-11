@@ -1,4 +1,5 @@
-import React, { useContext, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -22,8 +23,10 @@ const reducer = (state, action) => {
 };
 
 export default function ProfileScreen() {
+  const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
+  const id = userInfo.id;
   const [name, setName] = useState(userInfo.name);
   const [email, setEmail] = useState(userInfo.email);
   const [password, setPassword] = useState("");
@@ -35,9 +38,13 @@ export default function ProfileScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (password != confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
     try {
-      const { data } = await axios.put(
-        "/api/users/profile",
+      const { data } = await axios.patch(
+        `/api/profile/${id}`,
         {
           name,
           email,
@@ -52,7 +59,8 @@ export default function ProfileScreen() {
       });
       ctxDispatch({ type: "USER_SIGNIN", payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      toast.success("User updated successfully");
+      toast.success("Profile updated");
+      navigate("/");
     } catch (err) {
       dispatch({
         type: "FETCH_FAIL",

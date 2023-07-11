@@ -91,7 +91,7 @@ export default function ProductEditScreen() {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      await axios.patch(
+      const { data } = await axios.patch(
         `/api/products/${productId}`,
         {
           id: productId,
@@ -111,7 +111,7 @@ export default function ProductEditScreen() {
       dispatch({
         type: "UPDATE_SUCCESS",
       });
-      toast.success("Product updated successfully");
+      toast.success(data.message);
       navigate("/admin/products");
     } catch (err) {
       toast.error(getError(err));
