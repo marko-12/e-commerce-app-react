@@ -18,6 +18,7 @@ export default function ResetPasswordScreen() {
 
   const { state } = useContext(Store);
   const { userInfo } = state;
+  const user_id = userInfo.id;
 
   useEffect(() => {
     // if (userInfo || !token) {
@@ -35,10 +36,9 @@ export default function ResetPasswordScreen() {
       return;
     }
     try {
-      const user_id = userInfo.id;
-      const { data } = await axios.post("/api/users/reset-password", {
+      const { data } = await axios.patch(`/api/reset-password/${user_id}`, {
         password,
-        token,
+        //token,
       });
       navigate("/signin");
       toast.success(data.message);
