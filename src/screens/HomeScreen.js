@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -6,6 +6,7 @@ import Product from "../components/Product";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
+import { Store } from "../Store";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -26,6 +27,8 @@ function HomeScreen() {
     loading: true,
     error: "",
   });
+  const { state } = useContext(Store);
+  const {cart: { shippingAddress}} = state;
   // const [products, setProducts] = useState([]);
   useEffect(() => {
     (async () => {
@@ -40,6 +43,8 @@ function HomeScreen() {
       // setProducts(result.data);
     })();
     //fetchData();
+    console.log(shippingAddress)
+
   }, []);
   return (
     <div>

@@ -29,8 +29,8 @@ export default function ProfileScreen() {
   const id = userInfo.id;
   const [name, setName] = useState(userInfo.name);
   const [email, setEmail] = useState(userInfo.email);
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
 
   const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
@@ -38,17 +38,17 @@ export default function ProfileScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (password != confirmPassword) {
-      toast.error("Passwords don't match");
-      return;
-    }
+    // if (password != confirmPassword) {
+    //   toast.error("Passwords don't match");
+    //   return;
+    // }
     try {
       const { data } = await axios.patch(
         `/api/profile/${id}`,
         {
           name,
           email,
-          password,
+          //password,
         },
         {
           headers: { Authorization: `Bearer ${userInfo.token}` },
@@ -93,7 +93,7 @@ export default function ProfileScreen() {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
+        {/* <Form.Group className="mb-3" controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
@@ -106,7 +106,7 @@ export default function ProfileScreen() {
             type="password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-        </Form.Group>
+        </Form.Group> */}
         <div className="mb-3">
           <Button type="submit">Update</Button>
         </div>
