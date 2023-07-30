@@ -15,8 +15,9 @@ export default function ShippingAddressScreen() {
     cart: { shippingAddress },
   } = state;
   const [fullName, setFullName] = useState(shippingAddress.fullName || "");
-  const [address, setAddress] = useState(shippingAddress.address || "");
+  const [country, setCountry] = useState(shippingAddress.country || "");
   const [city, setCity] = useState(shippingAddress.city || "");
+  const [address, setAddress] = useState(shippingAddress.address || "");
   const [postalCode, setPostalCode] = useState(
     shippingAddress.postalCode || ""
   );
@@ -26,7 +27,6 @@ export default function ShippingAddressScreen() {
       navigate("/signin");
     }
   }, [userInfo, navigate]);
-  const [country, setCountry] = useState(shippingAddress.country || "");
   const submitHandler = (e) => {
     e.preventDefault();
     ctxDispatch({

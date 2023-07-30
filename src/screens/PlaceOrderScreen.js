@@ -41,8 +41,14 @@ export default function PlaceOrderScreen() {
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
   cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
-  cart.taxPrice = round2(0.15 * cart.itemsPrice);
-  cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
+  //cart.taxPrice = round2(0.15 * cart.itemsPrice);
+  cart.totalPrice = cart.itemsPrice + cart.shippingPrice;
+
+  var order_items = [];
+  cart.cartItems.forEach((item) => {
+    let orderItem = { quantity: item.quantity, product_id: item.id };
+    order_items.push(orderItem);
+  });
 
   const placeOrderHandler = async () => {
     try {
@@ -51,13 +57,18 @@ export default function PlaceOrderScreen() {
       const { data } = await Axios.post(
         "/api/orders",
         {
-          orderItems: cart.cartItems,
-          shippingAddress: cart.shippingAddress,
-          paymentMethod: cart.paymentMethod,
-          itemsPrice: cart.itemsPrice,
-          shippingPrice: cart.shippingPrice,
-          taxPrice: cart.taxPrice,
-          totalPrice: cart.totalPrice,
+          country: cart.shippingAddress.country,
+          city: cart.shippingAddress.city,
+          postal_code: cart.shippingAddress.postalCode,
+          address: cart.shippingAddress.address,
+          order_items: order_items,
+          user_id: userInfo.id,
+          // shippingAddress: cart.shippingAddress,
+          // paymentMethod: cart.paymentMethod,
+          // itemsPrice: cart.itemsPrice,
+          // shippingPrice: cart.shippingPrice,
+          // taxPrice: cart.taxPrice,
+          // totalPrice: cart.totalPrice,
         },
         {
           headers: {
@@ -79,6 +90,7 @@ export default function PlaceOrderScreen() {
     if (!cart.paymentMethod) {
       navigate("/payment");
     }
+    console.log(order_items);
   }, [cart, navigate]);
 
   return (
@@ -95,7 +107,7 @@ export default function PlaceOrderScreen() {
               <Card.Title>Shipping</Card.Title>
               <Card.Text>
                 <strong>Name:</strong> {cart.shippingAddress.fullName} <br />
-                <strong>Address: </strong> {cart.shippingAddress.address},
+                <strong>Address: </strong> {cart.shippingAddress.address},{" "}
                 {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},
                 {cart.shippingAddress.country}
               </Card.Text>
@@ -118,7 +130,7 @@ export default function PlaceOrderScreen() {
               <Card.Title>Items</Card.Title>
               <ListGroup variant="flush">
                 {cart.cartItems.map((item) => (
-                  <ListGroup.Item key={item._id}>
+                  <ListGroup.Item key={item.id}>
                     <Row className="align-items-center">
                       <Col md={6}>
                         <img
@@ -126,7 +138,7 @@ export default function PlaceOrderScreen() {
                           alt={item.name}
                           className="img-fluid rounded img-thumbnail"
                         ></img>{" "}
-                        <Link to={`/product/${item.slug}`}>{item.name}</Link>
+                        <Link to={`/product/${item.id}`}>{item.name}</Link>
                       </Col>
                       <Col md={3}>
                         <span>{item.quantity}</span>
@@ -160,7 +172,7 @@ export default function PlaceOrderScreen() {
                 <ListGroup.Item>
                   <Row>
                     <Col>Tax</Col>
-                    <Col>${cart.taxPrice.toFixed(2)}</Col>
+                    {/* <Col>${cart.taxPrice.toFixed(2)}</Col> */}
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
