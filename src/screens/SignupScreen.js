@@ -33,6 +33,7 @@ export default function SignupScreen() {
         name,
         email,
         password,
+        password_confirmation: confirmPassword
       });
       ctxDispatch({ type: "USER_SIGNIN", payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
