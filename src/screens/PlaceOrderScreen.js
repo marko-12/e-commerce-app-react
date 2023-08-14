@@ -1,4 +1,4 @@
-import Axios from "axios";
+import axios from "axios";
 import React, { useContext, useEffect, useReducer } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
@@ -41,7 +41,6 @@ export default function PlaceOrderScreen() {
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
   cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
-  //cart.taxPrice = round2(0.15 * cart.itemsPrice);
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice;
 
   var order_items = [];
@@ -52,33 +51,22 @@ export default function PlaceOrderScreen() {
 
   const placeOrderHandler = async () => {
     try {
+      console.log(cart.cartItems);
+      console.log(order_items);
       dispatch({ type: "CREATE_REQUEST" });
 
-      const { data } = await Axios.post(
-        "/api/orders",
-        {
-          country: cart.shippingAddress.country,
-          city: cart.shippingAddress.city,
-          postal_code: cart.shippingAddress.postalCode,
-          address: cart.shippingAddress.address,
-          order_items: order_items,
-          user_id: userInfo.id,
-          // shippingAddress: cart.shippingAddress,
-          // paymentMethod: cart.paymentMethod,
-          // itemsPrice: cart.itemsPrice,
-          // shippingPrice: cart.shippingPrice,
-          // taxPrice: cart.taxPrice,
-          // totalPrice: cart.totalPrice,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
+      const { data } = await axios.post("/api/orders", {
+        country: cart.shippingAddress.country,
+        city: cart.shippingAddress.city,
+        postal_code: cart.shippingAddress.postalCode,
+        address: cart.shippingAddress.address,
+        order_items: order_items,
+        user_id: userInfo.id,
+      });
       ctxDispatch({ type: "CART_CLEAR" });
       dispatch({ type: "CREATE_SUCCESS" });
       localStorage.removeItem("cartItems");
+      toast.success(data.message);
       navigate(`/order/${data.order.id}`);
     } catch (err) {
       dispatch({ type: "CREATE_FAIL" });
@@ -90,7 +78,6 @@ export default function PlaceOrderScreen() {
     if (!cart.paymentMethod) {
       navigate("/payment");
     }
-    console.log(order_items);
   }, [cart, navigate]);
 
   return (
@@ -167,12 +154,6 @@ export default function PlaceOrderScreen() {
                   <Row>
                     <Col>Shipping</Col>
                     <Col>${cart.shippingPrice.toFixed(2)}</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Tax</Col>
-                    {/* <Col>${cart.taxPrice.toFixed(2)}</Col> */}
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>

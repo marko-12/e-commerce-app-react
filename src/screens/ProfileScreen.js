@@ -43,23 +43,17 @@ export default function ProfileScreen() {
     //   return;
     // }
     try {
-      const { data } = await axios.patch(
-        `/api/profile/${id}`,
-        {
-          name,
-          email,
-          //password,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
+      const { data } = await axios.patch(`/api/users/${id}`, {
+        name,
+        email,
+        //password,
+      });
       dispatch({
         type: "UPDATE_SUCCESS",
       });
-      ctxDispatch({ type: "USER_SIGNIN", payload: data });
+      ctxDispatch({ type: "USER_SIGNIN", payload: data.updated_user });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      toast.success("Profile updated");
+      toast.success(data.message);
       navigate("/");
     } catch (err) {
       dispatch({

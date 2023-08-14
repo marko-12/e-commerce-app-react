@@ -7,6 +7,9 @@ const initialState = {
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
+  token: localStorage.getItem("token")
+    ? JSON.parse(localStorage.getItem("token"))
+    : null,
 
   cart: {
     shippingAddress: localStorage.getItem("shippingAddress")
@@ -52,6 +55,8 @@ function reducer(state, action) {
 
     case "USER_SIGNIN":
       return { ...state, userInfo: action.payload };
+    case "USER_TOKEN":
+      return { ...state, token: action.payload };
     case "USER_SIGNOUT":
       return {
         ...state,

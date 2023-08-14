@@ -91,23 +91,17 @@ export default function ProductEditScreen() {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      const { data } = await axios.patch(
-        `/api/products/${productId}`,
-        {
-          id: productId,
-          name,
-          price,
-          image,
-          images,
-          category,
-          brand,
-          count_in_stock,
-          description,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
+      const { data } = await axios.patch(`/api/products/${productId}`, {
+        id: productId,
+        name,
+        price,
+        image,
+        images,
+        category,
+        brand,
+        count_in_stock,
+        description,
+      });
       dispatch({
         type: "UPDATE_SUCCESS",
       });

@@ -40,6 +40,62 @@ import ProductCreateScreen from "./screens/ProductCreateScreen";
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { fullBox, cart, userInfo } = state;
+  console.log("this is an App Component");
+
+  axios.interceptors.request.use(
+    async (config) => {
+      config.headers["Authorization"] = localStorage.getItem("token")
+        ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
+        : null;
+      config.headers["Accept"] = "application/json";
+      config.headers["Content-Type"] = "application/json";
+      return config;
+    },
+    async (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  const refreshToken = async () => {
+    try {
+      const refresh_token = localStorage.getItem("token")
+        ? JSON.parse(localStorage.getItem("token")).refresh_token
+        : null;
+      const token = await axios.post("/api/auth/refresh", {
+        refresh_token: refresh_token,
+      });
+      console.log(refresh_token);
+      console.log("refreshtokeeen");
+      ctxDispatch({ type: "USER_TOKEN", payload: token.data });
+      localStorage.setItem("token", JSON.stringify(token.data));
+      return token;
+    } catch (err) {
+      toast.error(getError(err));
+    }
+  };
+
+  axios.interceptors.response.use(
+    async (response) => {
+      return response;
+    },
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response.status === 403 || error.response.status === 401) {
+        if (!originalRequest._retry) {
+          originalRequest._retry = true;
+          const { data } = await refreshToken();
+          console.log(data);
+          console.log(originalRequest);
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${data.access_token}`;
+          axios.defaults.headers.common["Accept"] = "application/json";
+          return axios(originalRequest);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });
@@ -63,6 +119,7 @@ function App() {
     };
     fetchCategories();
   }, [sidebarIsOpen]);
+
   return (
     <BrowserRouter>
       <div
@@ -196,7 +253,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-    
+
               <Route path="/placeorder" element={<PlaceOrderScreen />} />
               <Route
                 path="/order/:id"

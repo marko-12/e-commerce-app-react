@@ -1,20 +1,25 @@
-import React, { useContext, useEffect, useReducer } from 'react';
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { Store } from '../Store';
-import { getError } from '../utils';
-import Button from 'react-bootstrap/esm/Button';
+import React, { useContext, useEffect, useState, useReducer } from "react";
+import { Helmet } from "react-helmet-async";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import { Store } from "../Store";
+import { getError } from "../utils";
+import Button from "react-bootstrap/esm/Button";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FETCH_REQUEST':
+    case "FETCH_REQUEST":
       return { ...state, loading: true };
-    case 'FETCH_SUCCESS':
-      return { ...state, orders: action.payload, loading: false };
-    case 'FETCH_FAIL':
+    case "FETCH_SUCCESS":
+      return {
+        ...state,
+        orders: action.payload.orders,
+        orderItems: action.payload.order_items,
+        loading: false,
+      };
+    case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
@@ -26,23 +31,34 @@ export default function OrderHistoryScreen() {
   const { userInfo } = state;
   const navigate = useNavigate();
 
-  const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
-    loading: true,
-    error: '',
-  });
+  //const [orderItems, setOrderItems] = useState([]);
+
+  const [{ loading, error, orders, orderItems }, dispatch] = useReducer(
+    reducer,
+    {
+      loading: true,
+      error: "",
+      orders: [],
+      orderItems: [],
+    }
+  );
   useEffect(() => {
     const fetchData = async () => {
-      dispatch({ type: 'FETCH_REQUEST' });
+      dispatch({ type: "FETCH_REQUEST" });
       try {
-        const { data } = await axios.get(
-          `/api/orders/mine`,
-
-          { headers: { Authorization: `Bearer ${userInfo.token}` } }
-        );
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        const { data } = await axios.get(`/api/orders/my/${userInfo.id}`);
+        if (data) {
+          dispatch({ type: "FETCH_SUCCESS", payload: data });
+        }
+        // setOrderItems([]);
+        // await data.order_items.map((item) => {
+        //   setOrderItems((prevState) => [...prevState, item]);
+        //   console.log("iteration " + item);
+        //   return item;
+        // });
       } catch (error) {
         dispatch({
-          type: 'FETCH_FAIL',
+          type: "FETCH_FAIL",
           payload: getError(error),
         });
       }
@@ -74,22 +90,40 @@ export default function OrderHistoryScreen() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
-                <td>{order.totalPrice.toFixed(2)}</td>
-                <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
+              <tr key={order.id}>
+                <td>{order.id}</td>
+                <td>{order.created_at.substring(0, 10)}</td>
+                <td>
+                  $
+                  {orderItems.map((item) =>
+                    item[0].pivot.order_id === order.id
+                      ? item.reduce(
+                          (a, c) => a + c.price * c.pivot.quantity,
+                          0
+                        ) > 100
+                        ? item.reduce(
+                            (a, c) => a + c.price * c.pivot.quantity,
+                            0
+                          )
+                        : item.reduce(
+                            (a, c) => a + c.price * c.pivot.quantity,
+                            0
+                          ) + 10
+                      : null
+                  )}
+                </td>
+                <td>{order.isPaid ? order.paidAt.substring(0, 10) : "No"}</td>
                 <td>
                   {order.isDelivered
                     ? order.deliveredAt.substring(0, 10)
-                    : 'No'}
+                    : "No"}
                 </td>
                 <td>
                   <Button
                     type="button"
                     variant="light"
                     onClick={() => {
-                      navigate(`/order/${order._id}`);
+                      navigate(`/order/${order.id}`);
                     }}
                   >
                     Details

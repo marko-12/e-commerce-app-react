@@ -57,41 +57,17 @@ export default function ProductCreateScreen() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      //   await axios.put(
-      //     `/api/products/${productId}`,
-      //     {
-      //       _id: productId,
-      //       name,
-      //       slug,
-      //       price,
-      //       image,
-      //       images,
-      //       category,
-      //       brand,
-      //       countInStock,
-      //       description,
-      //     },
-      //     {
-      //       headers: { Authorization: `Bearer ${userInfo.token}` },
-      //     }
-      //   );
-      const { data } = await axios.post(
-        "/api/products",
-        {
-          name,
-          price,
-          image,
-          images,
-          category,
-          brand,
-          count_in_stock,
-          description,
-          user_id,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
+      const { data } = await axios.post("/api/products", {
+        name,
+        price,
+        image,
+        images,
+        category,
+        brand,
+        count_in_stock,
+        description,
+        user_id,
+      });
       toast.success(data.message);
       navigate("/admin/products");
     } catch (err) {

@@ -1,4 +1,4 @@
-import Axios from "axios";
+import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -29,14 +29,20 @@ export default function SignupScreen() {
       return;
     }
     try {
-      const { data } = await Axios.post("/api/signup", {
+      const { data } = await axios.post("/api/auth/register", {
         name,
         email,
         password,
-        password_confirmation: confirmPassword
+        password_confirmation: confirmPassword,
       });
       ctxDispatch({ type: "USER_SIGNIN", payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
+
+      const { user } = await axios.post("api/user-info", {
+        email,
+      });
+      ctxDispatch({ type: "USER_SIGNIN", payload: user });
+      localStorage.setItem("userInfo", JSON.stringify(user));
       navigate(redirect || "/");
     } catch (err) {
       toast.error(getError(err));

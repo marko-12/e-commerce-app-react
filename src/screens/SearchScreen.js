@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ import Button from "react-bootstrap/Button";
 import Product from "../components/Product";
 import LinkContainer from "react-router-bootstrap/LinkContainer";
 import ReactSlider from "react-slider";
+import { Store } from "../Store";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -59,6 +60,7 @@ export const ratings = [
 ];
 
 export default function SearchScreen() {
+  console.log("this is a SearchScreen Component");
   const navigate = useNavigate();
   const { search } = useLocation();
   const sp = new URLSearchParams(search); // /search?category=Shirts
@@ -70,12 +72,19 @@ export default function SearchScreen() {
   const order = sp.get("order") || "newest";
   const page = sp.get("page") || 1;
 
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { token } = state;
+
   const [
     { loading, error, products, pages, countProducts, totalProducts },
     dispatch,
   ] = useReducer(reducer, {
     loading: true,
     error: "",
+    products: [],
+    pages: 0,
+    countProducts: 0,
+    totalProducts: 0,
   });
   //countProducts je zapravo products per page, totalProducts je ukupan broj proizvoda
 
@@ -107,13 +116,13 @@ export default function SearchScreen() {
         //   `/api/search?page=${page}&name=${name}&category=${category}&price=${price}&rating=${rating}&order=${order}`
         // );
         const { data } = await axios.get(`/api/search?${queryString}`);
-
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({
           type: "FETCH_FAIL",
           payload: getError(error),
         });
+        console.log("Search Error: " + err);
       }
     };
     fetchData();

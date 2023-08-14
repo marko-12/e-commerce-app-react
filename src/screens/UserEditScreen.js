@@ -72,13 +72,12 @@ export default function UserEditScreen() {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      const { data } = await axios.patch(
-        `/api/users/${userId}`,
-        { id: userId, name, email, isAdmin },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
+      const { data } = await axios.patch(`/api/users/${userId}`, {
+        id: userId,
+        name,
+        email,
+        isAdmin,
+      });
       dispatch({
         type: "UPDATE_SUCCESS",
       });

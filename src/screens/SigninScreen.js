@@ -1,4 +1,4 @@
-import Axios from "axios";
+import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -19,17 +19,27 @@ export default function SigninScreen() {
   const [password, setPassword] = useState("");
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { userInfo } = state;
+  const { userInfo, token } = state;
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await Axios.post("/api/signin", {
+      const { data } = await axios.post("/api/auth/login", {
         email,
         password,
       });
-      ctxDispatch({ type: "USER_SIGNIN", payload: data });
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      console.log(data);
+      if (data) {
+        ctxDispatch({ type: "USER_TOKEN", payload: data });
+        localStorage.setItem("token", JSON.stringify(data));
+      }
+      console.log(token);
+
+      const ui = await axios.get("/api/user-info");
+      if (ui) {
+        ctxDispatch({ type: "USER_SIGNIN", payload: ui.data });
+        localStorage.setItem("userInfo", JSON.stringify(ui.data));
+      }
+
       navigate(redirect || "/");
     } catch (err) {
       toast.error(getError(err));

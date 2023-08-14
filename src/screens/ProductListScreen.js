@@ -103,18 +103,6 @@ export default function ProductListScreen() {
   const createHandler = async () => {
     if (window.confirm("Are you sure you want to create a new product?")) {
       try {
-        // dispatch({ type: "CREATE_REQUEST" });
-        // const { data } = await axios.post(
-        //   "/api/products",
-        //   {},
-        //   {
-        //     headers: { Authorization: `Bearer ${userInfo.token}` },
-        //   }
-        // );
-        // toast.success("product created successfully");
-        // dispatch({ type: "CREATE_SUCCESS" });
-
-        //navigate(`/admin/product/${data.product._id}`);
         navigate(`/admin/createproduct`);
       } catch (err) {
         getError(error);
@@ -129,9 +117,7 @@ export default function ProductListScreen() {
   const deleteHandler = async (product) => {
     if (window.confirm("Are you sure you want to delete?")) {
       try {
-        const { data } = await axios.delete(`/api/products/${product.id}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
+        const { data } = await axios.delete(`/api/products/${product.id}`);
         toast.success(data.message);
         dispatch({ type: "DELETE_SUCCESS" });
       } catch (err) {

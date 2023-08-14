@@ -11,13 +11,13 @@ import { getError } from "../utils";
 
 export default function ResetPasswordScreen() {
   const navigate = useNavigate();
-  const { token } = useParams();
+  //const { token } = useParams();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { state } = useContext(Store);
-  const { userInfo } = state;
+  const { userInfo, token } = state;
   const user_id = userInfo.id;
 
   useEffect(() => {
@@ -38,12 +38,12 @@ export default function ResetPasswordScreen() {
     try {
       const { data } = await axios.patch(`/api/reset-password/${user_id}`, {
         password,
-        //token,
       });
       navigate("/signin");
       toast.success(data.message);
     } catch (err) {
       toast.error(getError(err));
+      console.log(err.message);
     }
   };
 

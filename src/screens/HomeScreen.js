@@ -28,7 +28,9 @@ function HomeScreen() {
     error: "",
   });
   const { state } = useContext(Store);
-  const {cart: { shippingAddress}} = state;
+  const {
+    cart: { shippingAddress },
+  } = state;
   // const [products, setProducts] = useState([]);
   useEffect(() => {
     (async () => {
@@ -39,12 +41,9 @@ function HomeScreen() {
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: err.message });
       }
-
       // setProducts(result.data);
     })();
     //fetchData();
-    console.log(shippingAddress)
-
   }, []);
   return (
     <div>
