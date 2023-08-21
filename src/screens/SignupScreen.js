@@ -35,14 +35,17 @@ export default function SignupScreen() {
         password,
         password_confirmation: confirmPassword,
       });
-      ctxDispatch({ type: "USER_SIGNIN", payload: data });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      if (data) {
+        ctxDispatch({ type: "USER_TOKEN", payload: data });
+        localStorage.setItem("token", JSON.stringify(data));
+      }
 
-      const { user } = await axios.post("api/user-info", {
-        email,
-      });
-      ctxDispatch({ type: "USER_SIGNIN", payload: user });
-      localStorage.setItem("userInfo", JSON.stringify(user));
+      const ui = await axios.get("api/user-info");
+      if (ui) {
+        ctxDispatch({ type: "USER_SIGNIN", payload: ui.data });
+        localStorage.setItem("userInfo", JSON.stringify(ui.data));
+      }
+
       navigate(redirect || "/");
     } catch (err) {
       toast.error(getError(err));

@@ -17,50 +17,27 @@ export default function ProductCreateScreen() {
   const { id: productId } = params;
 
   const { state } = useContext(Store);
-  const { userInfo } = state;
+  const { userInfo, token } = state;
   const user_id = userInfo.id;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
   const [images, setImages] = useState([]);
   const [category, setCategory] = useState("");
   const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
-
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         dispatch({ type: "FETCH_REQUEST" });
-  //         const { data } = await axios.get(`/api/products/${productId}`);
-  //         setName(data.name);
-  //         setSlug(data.slug);
-  //         setPrice(data.price);
-  //         setImage(data.image);
-  //         setImages(data.images);
-  //         setCategory(data.category);
-  //         setCountInStock(data.countInStock);
-  //         setBrand(data.brand);
-  //         setDescription(data.description);
-  //         dispatch({ type: "FETCH_SUCCESS" });
-  //       } catch (err) {
-  //         dispatch({
-  //           type: "FETCH_FAIL",
-  //           payload: getError(err),
-  //         });
-  //       }
-  //     };
-  //     fetchData();
-  //   }, [productId]);
+  const [selectedFile, setSelectedFile] = useState({});
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    onFileUploadHandler();
+
     try {
       const { data } = await axios.post("/api/products", {
         name,
         price,
-        image,
         images,
         category,
         brand,
@@ -74,24 +51,32 @@ export default function ProductCreateScreen() {
       toast.error(getError(err));
     }
   };
-  const uploadFileHandler = async (e, forImages) => {
-    const file = e.target.files[0];
-    const bodyFormData = new FormData();
-    bodyFormData.append("file", file);
-    try {
-      const { data } = await axios.post("/api/upload", bodyFormData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authorization: `Bearer ${userInfo.token}`,
-        },
-      });
+  useEffect(() => {
+    console.log(selectedFile);
+  });
 
-      if (forImages) {
-        setImages([...images, data.secure_url]);
-      } else {
-        setImage(data.secure_url);
-      }
-      toast.success("Image uploaded successfully. click Update to apply it");
+  const onFileChangeHandler = (e) => {
+    e.preventDefault();
+    setSelectedFile(e.target.files[0]);
+  };
+  const onFileUploadHandler = async () => {
+    const formData = new FormData();
+    const blob = new Blob([selectedFile]);
+    formData.append("file", selectedFile, selectedFile.name);
+    //formData.append("_method", "PATCH");
+    try {
+      const { data } = await axios.post(
+        "/api/image",
+        { image: formData },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      toast.success(data.message);
+      console.log("File Data: " + data);
     } catch (err) {
       toast.error(getError(err));
     }
@@ -128,39 +113,9 @@ export default function ProductCreateScreen() {
             type="number"
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="image">
-          <Form.Label>Image File</Form.Label>
-          <Form.Control
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            required
-          />
-        </Form.Group>
         <Form.Group className="mb-3" controlId="imageFile">
           <Form.Label>Upload Image</Form.Label>
-          <Form.Control type="file" onChange={uploadFileHandler} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="additionalImage">
-          <Form.Label>Additional Images</Form.Label>
-          {images.length === 0 && <MessageBox>No image</MessageBox>}
-          <ListGroup variant="flush">
-            {images.map((x) => (
-              <ListGroup.Item key={x}>
-                {x}
-                <Button variant="light" onClick={() => deleteFileHandler(x)}>
-                  <i className="fa fa-times-circle"></i>
-                </Button>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="additionalImageFile">
-          <Form.Label>Upload Aditional Image</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={(e) => uploadFileHandler(e, true)}
-          />
+          <Form.Control type="file" onChange={onFileChangeHandler} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="category">

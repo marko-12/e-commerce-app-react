@@ -83,14 +83,13 @@ export default function ProductListScreen() {
       try {
         //const { data } = await axios.get(`/api/products/admin?page=${page} `, {
         const { data } = await axios.get(
-          `/api/products_paginated/?page=${page}`,
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
+          `/api/products_paginated/?page=${page}`
         );
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
-      } catch (err) {}
+      } catch (err) {
+        toast.error(getError(err));
+      }
     };
 
     if (successDelete) {
@@ -151,7 +150,8 @@ export default function ProductListScreen() {
       {loadingDelete && <LoadingBox></LoadingBox>}
 
       {loading ? (
-        <LoadingBox></LoadingBox>
+        // <LoadingBox></LoadingBox> // bezveze se vrti dok nema nijedan Product
+        <div></div>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (

@@ -7,6 +7,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StoreProvider } from "./Store";
+import AxiosInterceptor from "./components/AxiosInterceptor";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,7 +15,9 @@ root.render(
     <StoreProvider>
       <HelmetProvider>
         <PayPalScriptProvider deferLoading={true}>
-          <App />
+          <AxiosInterceptor>
+            <App />
+          </AxiosInterceptor>
         </PayPalScriptProvider>
       </HelmetProvider>
     </StoreProvider>

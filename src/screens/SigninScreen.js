@@ -32,7 +32,6 @@ export default function SigninScreen() {
         ctxDispatch({ type: "USER_TOKEN", payload: data });
         localStorage.setItem("token", JSON.stringify(data));
       }
-      console.log(token);
 
       const ui = await axios.get("/api/user-info");
       if (ui) {
