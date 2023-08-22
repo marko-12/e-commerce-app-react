@@ -10,6 +10,7 @@ import Form from "react-bootstrap/Form";
 import { Helmet } from "react-helmet-async";
 import MessageBox from "../components/MessageBox";
 import Button from "react-bootstrap/Button";
+import logo192 from "../logo192.png";
 
 export default function ProductCreateScreen() {
   const navigate = useNavigate();
@@ -27,60 +28,50 @@ export default function ProductCreateScreen() {
   const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedFile, setSelectedFile] = useState({});
+  const [selectedFile, setSelectedFile] = useState();
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    onFileUploadHandler();
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("brand", brand);
+    formData.append("count_in_stock", count_in_stock);
+    formData.append("description", description);
+    const blob = new Blob([selectedFile]);
+    formData.append("image", selectedFile);
+    console.log(selectedFile.image);
+    //formData.append("_method", "PATCH");
 
     try {
-      const { data } = await axios.post("/api/products", {
-        name,
-        price,
-        images,
-        category,
-        brand,
-        count_in_stock,
-        description,
-        user_id,
-      });
+      console.log(formData.get("image"));
+      const { data } = await axios.post("/api/products", formData);
+      // const { data } = await axios.request({
+      //   url: "/api/products",
+      //   method: "post",
+      //   data: formData,
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "multipart/form-data", // Set the correct Content-Type for FormData
+      //   },
+      // });
       toast.success(data.message);
       navigate("/admin/products");
     } catch (err) {
+      console.log("catch");
       toast.error(getError(err));
     }
   };
-  useEffect(() => {
-    console.log(selectedFile);
-  });
 
   const onFileChangeHandler = (e) => {
     e.preventDefault();
     setSelectedFile(e.target.files[0]);
+    console.log(e.target.files[0]);
+    //setSelectedFile(URL.createObjectURL(e.target.files[0]))
   };
-  const onFileUploadHandler = async () => {
-    const formData = new FormData();
-    const blob = new Blob([selectedFile]);
-    formData.append("file", selectedFile, selectedFile.name);
-    //formData.append("_method", "PATCH");
-    try {
-      const { data } = await axios.post(
-        "/api/image",
-        { image: formData },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
 
-      toast.success(data.message);
-      console.log("File Data: " + data);
-    } catch (err) {
-      toast.error(getError(err));
-    }
-  };
   const deleteFileHandler = async (fileName, f) => {
     console.log(fileName, f);
     console.log(images);

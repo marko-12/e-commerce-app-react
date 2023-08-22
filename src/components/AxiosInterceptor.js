@@ -12,11 +12,19 @@ function AxiosInterceptor({ children }) {
   useEffect(() => {
     axios.interceptors.request.use(
       async (config) => {
-        config.headers["Authorization"] = localStorage.getItem("token")
-          ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
-          : null;
-        config.headers["Accept"] = "application/json";
-        //config.headers["Content-Type"] = "application/json";
+        if (config.url !== "/api/products") {
+          config.headers["Authorization"] = localStorage.getItem("token")
+            ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
+            : null;
+          config.headers["Accept"] = "application/json";
+          config.headers["Content-Type"] = "application/json";
+        } else {
+          config.headers["Authorization"] = localStorage.getItem("token")
+            ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
+            : null;
+          config.headers["Accept"] = "application/json";
+          config.headers["Content-Type"] = "multipart/form-data";
+        }
 
         return config;
       },
@@ -59,6 +67,8 @@ function AxiosInterceptor({ children }) {
               "Authorization"
             ] = `Bearer ${data.access_token}`;
             axios.defaults.headers.common["Accept"] = "application/json";
+            axios.defaults.headers.common["Content-Type"] = "application/json";
+
             return axios(originalRequest);
           }
         }
