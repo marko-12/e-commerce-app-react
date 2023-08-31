@@ -10,7 +10,6 @@ import Form from "react-bootstrap/Form";
 import { Helmet } from "react-helmet-async";
 import MessageBox from "../components/MessageBox";
 import Button from "react-bootstrap/Button";
-import logo192 from "../logo192.png";
 
 export default function ProductCreateScreen() {
   const navigate = useNavigate();
@@ -18,8 +17,7 @@ export default function ProductCreateScreen() {
   const { id: productId } = params;
 
   const { state } = useContext(Store);
-  const { userInfo, token } = state;
-  const user_id = userInfo.id;
+  const { userInfo } = state;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -28,7 +26,7 @@ export default function ProductCreateScreen() {
   const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -40,13 +38,11 @@ export default function ProductCreateScreen() {
     formData.append("brand", brand);
     formData.append("count_in_stock", count_in_stock);
     formData.append("description", description);
-    const blob = new Blob([selectedFile]);
-    formData.append("image", selectedFile);
-    console.log(selectedFile.image);
-    //formData.append("_method", "PATCH");
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append("image[]", selectedFiles[i]);
+    }
 
     try {
-      console.log(formData.get("image"));
       const { data } = await axios.post("/api/products", formData);
       // const { data } = await axios.request({
       //   url: "/api/products",
@@ -67,8 +63,8 @@ export default function ProductCreateScreen() {
 
   const onFileChangeHandler = (e) => {
     e.preventDefault();
-    setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
+    setSelectedFiles(e.target.files);
+    console.log(e.target.files);
     //setSelectedFile(URL.createObjectURL(e.target.files[0]))
   };
 
@@ -106,7 +102,7 @@ export default function ProductCreateScreen() {
         </Form.Group>
         <Form.Group className="mb-3" controlId="imageFile">
           <Form.Label>Upload Image</Form.Label>
-          <Form.Control type="file" onChange={onFileChangeHandler} />
+          <Form.Control type="file" multiple onChange={onFileChangeHandler} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="category">

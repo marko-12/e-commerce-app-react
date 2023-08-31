@@ -136,7 +136,7 @@ function ProductScreen() {
         <Col md={6}>
           <img
             className="img-large"
-            src={selectedImage || product.image}
+            //src={selectedImage || product.image}
             //src="https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg"
             alt={product.name}
           ></img>

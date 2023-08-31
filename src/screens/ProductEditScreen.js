@@ -91,17 +91,7 @@ export default function ProductEditScreen() {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      const { data } = await axios.patch(`/api/products/${productId}`, {
-        id: productId,
-        name,
-        price,
-        image,
-        images,
-        category,
-        brand,
-        count_in_stock,
-        description,
-      });
+      const { data } = await axios.patch(`/api/products/${productId}`);
       dispatch({
         type: "UPDATE_SUCCESS",
       });
@@ -112,7 +102,7 @@ export default function ProductEditScreen() {
       dispatch({ type: "UPDATE_FAIL" });
     }
   };
-  const uploadFileHandler = async (e, forImages) => {
+  const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
     bodyFormData.append("file", file);
@@ -125,25 +115,13 @@ export default function ProductEditScreen() {
         },
       });
       dispatch({ type: "UPLOAD_SUCCESS" });
-
-      if (forImages) {
-        setImages([...images, data.secure_url]);
-      } else {
-        setImage(data.secure_url);
-      }
       toast.success("Image uploaded successfully. click Update to apply it");
     } catch (err) {
       toast.error(getError(err));
       dispatch({ type: "UPLOAD_FAIL", payload: getError(err) });
     }
   };
-  const deleteFileHandler = async (fileName, f) => {
-    console.log(fileName, f);
-    console.log(images);
-    console.log(images.filter((x) => x !== fileName));
-    setImages(images.filter((x) => x !== fileName));
-    toast.success("Image removed successfully. click Update to apply it");
-  };
+
   return (
     <Container className="small-container">
       <Helmet>
@@ -165,14 +143,6 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          {/* <Form.Group className="mb-3" controlId="slug">
-            <Form.Label>Slug</Form.Label>
-            <Form.Control
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              required
-            />
-          </Form.Group> */}
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Price</Form.Label>
             <Form.Control
@@ -195,20 +165,6 @@ export default function ProductEditScreen() {
             {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
 
-          {/* <Form.Group className="mb-3" controlId="additionalImage">
-            <Form.Label>Additional Images</Form.Label>
-            {images.length === 0 && <MessageBox>No image</MessageBox>}
-            <ListGroup variant="flush">
-              {images.map((x) => (
-                <ListGroup.Item key={x}>
-                  {x}
-                  <Button variant="light" onClick={() => deleteFileHandler(x)}>
-                    <i className="fa fa-times-circle"></i>
-                  </Button>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          </Form.Group> */}
           <Form.Group className="mb-3" controlId="additionalImageFile">
             <Form.Label>Upload Aditional Image</Form.Label>
             <Form.Control

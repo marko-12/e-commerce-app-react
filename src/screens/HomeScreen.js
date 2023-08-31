@@ -13,7 +13,12 @@ const reducer = (state, action) => {
     case "FETCH_REQUEST":
       return { ...state, loading: true };
     case "FETCH_SUCCESS":
-      return { ...state, products: action.payload, loading: false };
+      return {
+        ...state,
+        products: action.payload.products,
+        images: action.payload.images,
+        loading: false,
+      };
     case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
     default:
@@ -22,8 +27,9 @@ const reducer = (state, action) => {
 };
 
 function HomeScreen() {
-  const [{ loading, error, products }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, products, images }, dispatch] = useReducer(reducer, {
     products: [],
+    images: [],
     loading: true,
     error: "",
   });
@@ -31,12 +37,14 @@ function HomeScreen() {
   const {
     cart: { shippingAddress },
   } = state;
-  // const [products, setProducts] = useState([]);
+
   useEffect(() => {
     (async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
-        const { data } = await axios.get("/api/products");
+        const { data } = await axios.get("/api/products", {
+          headers: { "Content-Type": "images" },
+        });
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: err.message });
@@ -45,6 +53,7 @@ function HomeScreen() {
     })();
     //fetchData();
   }, []);
+
   return (
     <div>
       <Helmet>
@@ -58,11 +67,16 @@ function HomeScreen() {
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
-            {products.map((product) => (
-              <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
-                <Product product={product}></Product>
-              </Col>
-            ))}
+            {products.map((product) => {
+              const image = images.find(
+                (image) => image.model_id === product.id
+              );
+              return (
+                <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
+                  <Product product={product} image={images[0]}></Product>
+                </Col>
+              );
+            })}
           </Row>
         )}
       </div>
