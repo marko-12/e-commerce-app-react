@@ -40,7 +40,6 @@ import ProductCreateScreen from "./screens/ProductCreateScreen";
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { fullBox, cart, userInfo } = state;
-  console.log("this is an App Component");
 
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });

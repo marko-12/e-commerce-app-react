@@ -15,15 +15,8 @@ function Product(props) {
     cart: { cartItems },
   } = state;
 
-  const [imageUuid, setImageUuid] = useState([]);
-
   useEffect(() => {
-    (async () => {
-      setImageUuid([]);
-      Object.keys(image).map((uuid) =>
-        setImageUuid((prevState) => [...prevState, uuid])
-      );
-    })();
+    product.images[0].name && console.log(product.images[0].original_url);
   }, []);
 
   const addToCartHandler = async (item) => {
@@ -42,16 +35,14 @@ function Product(props) {
 
   return (
     <Card>
-      {imageUuid[0] && (
-        <Link to={`/product/${product.id}`}>
-          <img
-            //src={`https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg`}
-            src={image[imageUuid[0]].original_url}
-            className="card-img-top"
-            alt={product.name}
-          />
-        </Link>
-      )}
+      <Link to={`/product/${product.id}`}>
+        <img
+          //src={`https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg`}
+          src={product.images[0].original_url}
+          className="card-img-top"
+          alt={product.name}
+        />
+      </Link>
       <Card.Body>
         <Link to={`/product/${product.id}`}>
           <Card.Title>{product.name}</Card.Title>

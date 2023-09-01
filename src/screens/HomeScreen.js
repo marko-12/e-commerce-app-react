@@ -15,8 +15,7 @@ const reducer = (state, action) => {
     case "FETCH_SUCCESS":
       return {
         ...state,
-        products: action.payload.products,
-        images: action.payload.images,
+        products: action.payload.data,
         loading: false,
       };
     case "FETCH_FAIL":
@@ -67,16 +66,11 @@ function HomeScreen() {
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
-            {products.map((product) => {
-              const image = images.find(
-                (image) => image.model_id === product.id
-              );
-              return (
-                <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
-                  <Product product={product} image={images[0]}></Product>
-                </Col>
-              );
-            })}
+            {products.map((product) => (
+              <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
+                <Product product={product}></Product>
+              </Col>
+            ))}
           </Row>
         )}
       </div>
