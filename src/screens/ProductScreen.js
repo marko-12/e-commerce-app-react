@@ -25,9 +25,9 @@ const reducer = (state, action) => {
     case "FETCH_SUCCESS":
       return {
         ...state,
-        product: action.payload[0],
-        reviews: action.payload[1],
-        users: action.payload[2],
+        product: action.payload.product,
+        reviews: action.payload.reviews,
+        users: action.payload.users,
         loading: false,
       };
     case "FETCH_FAIL":
@@ -42,7 +42,6 @@ function ProductScreen() {
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [selectedImage, setSelectedImage] = useState("");
 
   const navigate = useNavigate();
   const params = useParams();
@@ -133,14 +132,16 @@ function ProductScreen() {
   ) : (
     <div>
       <Row>
-        <Col md={6}>
-          <img
-            className="img-large"
-            //src={selectedImage || product.image}
-            //src="https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg"
-            alt={product.name}
-          ></img>
-        </Col>
+        {product.images && (
+          <Col md={6}>
+            <img
+              className="img-large"
+              src={product.images[0]}
+              //src="https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg"
+              alt={product.name}
+            ></img>
+          </Col>
+        )}
         <Col md={3}>
           <ListGroup variant="flush">
             <ListGroup.Item>

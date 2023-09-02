@@ -26,9 +26,8 @@ const reducer = (state, action) => {
 };
 
 function HomeScreen() {
-  const [{ loading, error, products, images }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, products }, dispatch] = useReducer(reducer, {
     products: [],
-    images: [],
     loading: true,
     error: "",
   });

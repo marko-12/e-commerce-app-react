@@ -77,21 +77,25 @@ export default function SearchBox() {
 
   async function getData() {
     // fetch data
-    const response = await axios.get("/api/products");
-    const res = await response.data;
-    (async () => {
-      for (var i = 0; i < res.length; i++) {
-        if (!myOptions.some((obj) => obj.label == res[i].name)) {
-          // create an object with a label
-          let object = {
-            label: res[i].name,
-            usersName: res[i].name,
-          };
-          myOptions.push(object);
+    try {
+      const response = await axios.get("/api/products");
+      const res = await response.data;
+      (async () => {
+        for (var i = 0; i < res.length; i++) {
+          if (!myOptions.some((obj) => obj.label == res[i].name)) {
+            // create an object with a label
+            let object = {
+              label: res[i].name,
+              usersName: res[i].name,
+            };
+            myOptions.push(object);
+          }
         }
-      }
-      setMyOptions(myOptions);
-    })();
+        setMyOptions(myOptions);
+      })();
+    } catch (e) {
+      navigate("/");
+    }
   }
 
   useEffect(() => getData, [myOptions]);

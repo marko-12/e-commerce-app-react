@@ -8,6 +8,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StoreProvider } from "./Store";
 import AxiosInterceptor from "./components/AxiosInterceptor";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,9 +16,11 @@ root.render(
     <StoreProvider>
       <HelmetProvider>
         <PayPalScriptProvider deferLoading={true}>
-          <AxiosInterceptor>
-            <App />
-          </AxiosInterceptor>
+          <BrowserRouter>
+            <AxiosInterceptor>
+              <App />
+            </AxiosInterceptor>
+          </BrowserRouter>
         </PayPalScriptProvider>
       </HelmetProvider>
     </StoreProvider>

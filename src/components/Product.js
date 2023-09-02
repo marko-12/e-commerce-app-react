@@ -15,10 +15,6 @@ function Product(props) {
     cart: { cartItems },
   } = state;
 
-  useEffect(() => {
-    product.images[0].name && console.log(product.images[0].original_url);
-  }, []);
-
   const addToCartHandler = async (item) => {
     const existItem = cartItems.find((x) => x.id === product.id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
@@ -35,14 +31,16 @@ function Product(props) {
 
   return (
     <Card>
-      <Link to={`/product/${product.id}`}>
-        <img
-          //src={`https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg`}
-          src={product.images[0].original_url}
-          className="card-img-top"
-          alt={product.name}
-        />
-      </Link>
+      {product.images && product.images[0] && (
+        <Link to={`/product/${product.id}`}>
+          <img
+            src={product.images[0].original_url}
+            className="card-img-top"
+            alt={product.name}
+          />
+        </Link>
+      )}
+
       <Card.Body>
         <Link to={`/product/${product.id}`}>
           <Card.Title>{product.name}</Card.Title>

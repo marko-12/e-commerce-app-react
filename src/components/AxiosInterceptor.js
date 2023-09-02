@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import axios from "axios";
 import { Store } from "../Store";
@@ -7,7 +8,7 @@ import { getError } from "../utils";
 
 function AxiosInterceptor({ children }) {
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const [isDone, setIsDone] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.interceptors.request.use(
@@ -41,14 +42,21 @@ function AxiosInterceptor({ children }) {
         const token = await axios.post("/api/auth/refresh", {
           refresh_token: refresh_token,
         });
-        console.log(refresh_token);
-        console.log("refreshtokeeen");
         ctxDispatch({ type: "USER_TOKEN", payload: token.data });
         localStorage.setItem("token", JSON.stringify(token.data));
         return token;
       } catch (err) {
         toast.error(getError(err));
       }
+    };
+
+    const signoutHandler = async () => {
+      ctxDispatch({ type: "USER_SIGNOUT" });
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("cartItems");
+      localStorage.removeItem("shippingAddress");
+      localStorage.removeItem("paymentMethod");
+      window.location.href = "/signin";
     };
 
     axios.interceptors.response.use(
@@ -58,19 +66,17 @@ function AxiosInterceptor({ children }) {
       async (error) => {
         const originalRequest = error.config;
         if (error.response.status === 403 || error.response.status === 401) {
-          if (!originalRequest._retry) {
-            originalRequest._retry = true;
-            const { data } = await refreshToken();
-            console.log(data);
-            console.log(originalRequest);
-            axios.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${data.access_token}`;
-            axios.defaults.headers.common["Accept"] = "application/json";
-            axios.defaults.headers.common["Content-Type"] = "application/json";
-
-            return axios(originalRequest);
-          }
+          // if (!originalRequest._retry) {
+          //   originalRequest._retry = true;
+          //   const { data } = await refreshToken();
+          //   axios.defaults.headers.common[
+          //     "Authorization"
+          //   ] = `Bearer ${data.access_token}`;
+          //   axios.defaults.headers.common["Accept"] = "application/json";
+          //   axios.defaults.headers.common["Content-Type"] = "application/json";
+          //   return axios(originalRequest);
+          // }
+          signoutHandler();
         }
         return Promise.reject(error);
       }

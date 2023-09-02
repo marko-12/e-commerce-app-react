@@ -23,10 +23,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         products: action.payload.products.data,
-        page: action.payload.products.from,
-        pages: action.payload.products.last_page,
-        countProducts: action.payload.countProducts,
-        totalProducts: action.payload.products.total,
+        page: action.payload.products.meta.from,
+        pages: action.payload.products.meta.last_page,
+        perPage: action.payload.products.meta.per_page,
+        totalProducts: action.payload.products.meta.total,
         loading: false,
       };
     case "FETCH_FAIL":
@@ -60,7 +60,6 @@ export const ratings = [
 ];
 
 export default function SearchScreen() {
-  console.log("this is a SearchScreen Component");
   const navigate = useNavigate();
   const { search } = useLocation();
   const sp = new URLSearchParams(search); // /search?category=Shirts
@@ -76,14 +75,14 @@ export default function SearchScreen() {
   const { token } = state;
 
   const [
-    { loading, error, products, pages, countProducts, totalProducts },
+    { loading, error, products, pages, perPage, totalProducts },
     dispatch,
   ] = useReducer(reducer, {
     loading: true,
     error: "",
     products: [],
+    perPage: 0,
     pages: 0,
-    countProducts: 0,
     totalProducts: 0,
   });
   //countProducts je zapravo products per page, totalProducts je ukupan broj proizvoda
@@ -122,7 +121,7 @@ export default function SearchScreen() {
           type: "FETCH_FAIL",
           payload: getError(error),
         });
-        console.log("Search Error: " + err);
+        navigate("/");
       }
     };
     fetchData();
@@ -308,8 +307,8 @@ export default function SearchScreen() {
                   </div>
                   <br />
                   <div>
-                    {countProducts && countProducts > 0
-                      ? `Showing ${countProducts} per page`
+                    {perPage && perPage > 0
+                      ? `Showing ${perPage} products per page`
                       : null}
                   </div>
                 </Col>
