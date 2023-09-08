@@ -51,8 +51,6 @@ export default function PlaceOrderScreen() {
 
   const placeOrderHandler = async () => {
     try {
-      console.log(cart.cartItems);
-      console.log(order_items);
       dispatch({ type: "CREATE_REQUEST" });
 
       const { data } = await axios.post("/api/orders", {
@@ -121,7 +119,7 @@ export default function PlaceOrderScreen() {
                     <Row className="align-items-center">
                       <Col md={6}>
                         <img
-                          src={item.image}
+                          src={item.images[0].original_url}
                           alt={item.name}
                           className="img-fluid rounded img-thumbnail"
                         ></img>{" "}

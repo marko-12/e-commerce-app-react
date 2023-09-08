@@ -19,7 +19,7 @@ function Product(props) {
     const existItem = cartItems.find((x) => x.id === product.id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${item.id}`);
-    if (data[0].count_in_stock < quantity) {
+    if (data.product.count_in_stock < quantity) {
       toast.error("Sorry the product is out of stock");
       return;
     }

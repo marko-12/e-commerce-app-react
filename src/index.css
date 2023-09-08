@@ -53,8 +53,8 @@ main {
   color: #a0a0a0;
 }
 .checkout-steps > div.active {
-  border-bottom: 0.2rem solid #f08000;
-  color: #f08000;
+  border-bottom: 0.2rem solid #1ce026;
+  color: #1ce026;
 }
 
 /* sidebar */

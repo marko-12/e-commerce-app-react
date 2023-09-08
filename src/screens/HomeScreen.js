@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -40,9 +40,7 @@ function HomeScreen() {
     (async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
-        const { data } = await axios.get("/api/products", {
-          headers: { "Content-Type": "images" },
-        });
+        const { data } = await axios.get("/api/products");
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: err.message });
@@ -58,6 +56,7 @@ function HomeScreen() {
         <title>Home Screen</title>
       </Helmet>
       <h1 style={{ textAlign: "center" }}>Current Products</h1>
+      <br />
       <div className="products">
         {loading ? (
           <LoadingBox />

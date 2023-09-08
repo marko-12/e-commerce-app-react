@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Store } from "../Store";
 import { Helmet } from "react-helmet-async";
 import { Row, Col, ListGroup, Button, Card } from "react-bootstrap";
@@ -16,7 +16,7 @@ export default function CartScreen() {
 
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item.id}`);
-    if (data[0].count_in_stock < quantity) {
+    if (data.product.count_in_stock < quantity) {
       toast.error("Sorry the product is out of stock");
       return;
     }
@@ -48,11 +48,11 @@ export default function CartScreen() {
           ) : (
             <ListGroup>
               {cartItems.map((item) => (
-                <ListGroup.Item key={item._id}>
+                <ListGroup.Item key={item.id}>
                   <Row className="align-items-center">
                     <Col md={4}>
                       <img
-                        src={item.image}
+                        src={item.images[0].original_url}
                         alt={item.name}
                         className="img-fluid rounded img-thumbnail"
                       ></img>{" "}

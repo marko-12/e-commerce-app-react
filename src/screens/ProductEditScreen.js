@@ -68,14 +68,13 @@ export default function ProductEditScreen() {
       try {
         dispatch({ type: "FETCH_REQUEST" });
         const { data } = await axios.get(`/api/products/${productId}`);
-        setName(data[0].name);
-        setPrice(data[0].price);
-        setImage(data[0].image);
-        setImages(data[0].images);
-        setCategory(data[0].category);
-        setCountInStock(data[0].count_in_stock);
-        setBrand(data[0].brand);
-        setDescription(data[0].description);
+        setName(data.product.name);
+        setPrice(data.product.price);
+        setImage(data.product.image);
+        setCategory(data.product.category);
+        setCountInStock(data.product.count_in_stock);
+        setBrand(data.product.brand);
+        setDescription(data.product.description);
         dispatch({ type: "FETCH_SUCCESS" });
       } catch (err) {
         dispatch({
@@ -107,13 +106,13 @@ export default function ProductEditScreen() {
     const bodyFormData = new FormData();
     bodyFormData.append("file", file);
     try {
-      dispatch({ type: "UPLOAD_REQUEST" });
-      const { data } = await axios.post("/api/upload", bodyFormData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authorization: `Bearer ${userInfo.token}`,
-        },
-      });
+      // dispatch({ type: "UPLOAD_REQUEST" });
+      // const { data } = await axios.post("/api/upload", bodyFormData, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //     authorization: `Bearer ${userInfo.token}`,
+      //   },
+      // });
       dispatch({ type: "UPLOAD_SUCCESS" });
       toast.success("Image uploaded successfully. click Update to apply it");
     } catch (err) {
@@ -125,7 +124,7 @@ export default function ProductEditScreen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Edit Product ${name}</title>
+        <title>Edit Product {name}</title>
       </Helmet>
       <h1>Edit Product {name}</h1>
 
@@ -151,28 +150,25 @@ export default function ProductEditScreen() {
               required
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="image">
-            <Form.Label>Image File</Form.Label>
-            <Form.Control
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              required
-            />
-          </Form.Group>
+
           <Form.Group className="mb-3" controlId="imageFile">
             <Form.Label>Upload Image</Form.Label>
-            <Form.Control type="file" onChange={uploadFileHandler} />
+            <Form.Control
+              type="file"
+              value={image}
+              onChange={uploadFileHandler}
+            />
             {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="additionalImageFile">
+          {/* <Form.Group className="mb-3" controlId="additionalImageFile">
             <Form.Label>Upload Aditional Image</Form.Label>
             <Form.Control
               type="file"
               onChange={(e) => uploadFileHandler(e, true)}
             />
             {loadingUpload && <LoadingBox></LoadingBox>}
-          </Form.Group>
+          </Form.Group> */}
 
           <Form.Group className="mb-3" controlId="category">
             <Form.Label>Category</Form.Label>

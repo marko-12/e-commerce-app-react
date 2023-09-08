@@ -72,7 +72,6 @@ export default function SearchScreen() {
   const page = sp.get("page") || 1;
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { token } = state;
 
   const [
     { loading, error, products, pages, perPage, totalProducts },

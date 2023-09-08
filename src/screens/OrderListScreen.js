@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import { toast } from "react-toastify";
 import Button from "react-bootstrap/Button";
 import { Helmet } from "react-helmet-async";
@@ -157,6 +157,16 @@ export default function OrderListScreen() {
                     }}
                   >
                     Details
+                  </Button>
+                  &nbsp;
+                  <Button
+                    type="button"
+                    variant="light"
+                    onClick={() => {
+                      navigate(`/admin/order/${order.id}`);
+                    }}
+                  >
+                    Edit
                   </Button>
                   &nbsp;
                   <Button

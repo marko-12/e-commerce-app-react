@@ -17,6 +17,7 @@ import { Store } from "../Store";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toast } from "react-toastify";
 import { ListGroupItem } from "react-bootstrap";
+import SimpleImageSlider from "react-simple-image-slider";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -57,6 +58,19 @@ function ProductScreen() {
     loading: true,
     error: "",
   });
+
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    if (product.images) {
+      setImages([]);
+      product.images.map((image) => {
+        setImages((prevState) => [...prevState, { url: image.original_url }]);
+      });
+    }
+    console.log(images);
+  }, [product]);
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" });
@@ -132,14 +146,22 @@ function ProductScreen() {
   ) : (
     <div>
       <Row>
-        {product.images && (
+        {images[0] && (
           <Col md={6}>
-            <img
+            {/* <img
               className="img-large"
-              src={product.images[0]}
+              src={product.images[0].original_url}
               //src="https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg"
               alt={product.name}
-            ></img>
+            ></img> */}
+            <SimpleImageSlider
+              width="30rem"
+              height="30rem"
+              images={images}
+              showBullets={true}
+              showNavs={true}
+              autoPlay={true}
+            />
           </Col>
         )}
         <Col md={3}>

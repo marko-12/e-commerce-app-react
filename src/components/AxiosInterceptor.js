@@ -1,14 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import React from "react";
+import { useContext, useEffect } from "react";
 import axios from "axios";
 import { Store } from "../Store";
 import { toast } from "react-toastify";
 import { getError } from "../utils";
 
 function AxiosInterceptor({ children }) {
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const navigate = useNavigate();
+  const { dispatch: ctxDispatch } = useContext(Store);
 
   useEffect(() => {
     axios.interceptors.request.use(
@@ -50,9 +47,10 @@ function AxiosInterceptor({ children }) {
       }
     };
 
-    const signoutHandler = async () => {
+    const signoutHandler = () => {
       ctxDispatch({ type: "USER_SIGNOUT" });
       localStorage.removeItem("userInfo");
+      localStorage.removeItem("token");
       localStorage.removeItem("cartItems");
       localStorage.removeItem("shippingAddress");
       localStorage.removeItem("paymentMethod");
@@ -65,27 +63,29 @@ function AxiosInterceptor({ children }) {
       },
       async (error) => {
         const originalRequest = error.config;
+        // if (error.response.status === 403 || error.response.status === 401) {
+        //   if (!originalRequest._retry) {
+        //     originalRequest._retry = true;
+        //     const { data } = await refreshToken();
+        //     axios.defaults.headers.common[
+        //       "Authorization"
+        //     ] = `Bearer ${data.access_token}`;
+        //     axios.defaults.headers.common["Accept"] = "application/json";
+        //     axios.defaults.headers.common["Content-Type"] = "application/json";
+        //     return axios(originalRequest);
+        //   }
+        //   signoutHandler();
+        // }
+
         if (error.response.status === 403 || error.response.status === 401) {
-          // if (!originalRequest._retry) {
-          //   originalRequest._retry = true;
-          //   const { data } = await refreshToken();
-          //   axios.defaults.headers.common[
-          //     "Authorization"
-          //   ] = `Bearer ${data.access_token}`;
-          //   axios.defaults.headers.common["Accept"] = "application/json";
-          //   axios.defaults.headers.common["Content-Type"] = "application/json";
-          //   return axios(originalRequest);
-          // }
-          signoutHandler();
+          if (originalRequest.url !== "/api/auth/login") {
+            signoutHandler();
+          }
         }
         return Promise.reject(error);
       }
     );
-  });
-
-  //   const ref_token = localStorage.getItem("token").refresh_token
-  //     ? JSON.parse(localStorage.getItem("token")).refresh_token
-  //     : null;
+  }, []);
 
   return children;
 }

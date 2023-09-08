@@ -138,7 +138,6 @@ export default function OrderScreen() {
         data.order_items.map((item) => {
           const itemPrice = item.pivot.quantity * item.price;
           setItemPrices((prevPrices) => [...prevPrices, itemPrice]);
-          console.log("iteration " + item.id);
           return itemPrices;
         });
         return data;
@@ -151,35 +150,6 @@ export default function OrderScreen() {
 
     if (!userInfo) {
       return navigate("/login");
-    }
-
-    if (
-      !order.id ||
-      successPay ||
-      successDeliver ||
-      (order._id && order._id !== orderId)
-    ) {
-      if (successPay) {
-        dispatch({ type: "PAY_RESET" });
-      }
-      if (successDeliver) {
-        dispatch({ type: "DELIVER_RESET" });
-      }
-    } else {
-      const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get("/api/keys/paypal", {
-          headers: { authorization: `Bearer ${userInfo.token}` },
-        });
-        paypalDispatch({
-          type: "resetOptions",
-          value: {
-            "client-id": clientId,
-            currency: "USD",
-          },
-        });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
-      };
-      loadPaypalScript();
     }
   }, [
     //order,
@@ -238,13 +208,13 @@ export default function OrderScreen() {
               <Card.Text>
                 <strong>Method:</strong> {order.paymentMethod}
               </Card.Text>
-              {order.isPaid ? (
+              {/* {order.isPaid ? (
                 <MessageBox variant="success">
                   Paid at {order.paidAt}
                 </MessageBox>
               ) : (
                 <MessageBox variant="danger">Not Paid</MessageBox>
-              )}
+              )} */}
             </Card.Body>
           </Card>
 
@@ -255,14 +225,17 @@ export default function OrderScreen() {
                 {orderItems.map((item) => (
                   <ListGroup.Item key={item.id}>
                     <Row className="align-items-center">
-                      <Col md={6}>
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="img-fluid rounded img-thumbnail"
-                        ></img>{" "}
-                        <Link to={`/product/${item.id}`}>{item.name}</Link>
-                      </Col>
+                      {item.images && item.images[0] && (
+                        <Col md={6}>
+                          <img
+                            src={item.images[0].original_url}
+                            alt={item.name}
+                            className="img-fluid rounded img-thumbnail"
+                          ></img>{" "}
+                          <Link to={`/product/${item.id}`}>{item.name}</Link>
+                        </Col>
+                      )}
+
                       <Col md={3}>
                         <span>{item.pivot.quantity}</span>
                       </Col>

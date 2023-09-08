@@ -61,6 +61,7 @@ function reducer(state, action) {
       return {
         ...state,
         userInfo: null,
+        token: null,
         cart: {
           cartItems: [],
           shippingAddress: {},
