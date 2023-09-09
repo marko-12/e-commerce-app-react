@@ -25,7 +25,7 @@ function reducer(state, action) {
         loading: false,
         order: action.payload.order,
         orderItems: action.payload.order_items,
-        user: action.payload.users,
+        user: action.payload.user,
         error: "",
       };
     case "FETCH_FAIL":
@@ -88,45 +88,7 @@ export default function OrderScreen() {
     orderItems: [],
     users: [],
     error: "",
-    successPay: false,
-    loadingPay: false,
   });
-
-  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
-
-  function createOrder(data, actions) {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            amount: { value: order.totalPrice },
-          },
-        ],
-      })
-      .then((orderID) => {
-        return orderID;
-      });
-  }
-
-  function onApprove(data, actions) {
-    return actions.order.capture().then(async function (details) {
-      try {
-        dispatch({ type: "PAY_REQUEST" });
-        const { data } = await axios.put(
-          `/api/orders/${order._id}/pay`,
-          details
-        );
-        dispatch({ type: "PAY_SUCCESS", payload: data });
-        toast.success("Order is paid");
-      } catch (err) {
-        dispatch({ type: "PAY_FAIL", payload: getError(err) });
-        toast.error(getError(err));
-      }
-    });
-  }
-  function onError(err) {
-    toast.error(getError(err));
-  }
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -156,22 +118,7 @@ export default function OrderScreen() {
     userInfo,
     orderId,
     navigate,
-    paypalDispatch,
-    successPay,
-    successDeliver,
   ]);
-
-  async function deliverOrderHandler() {
-    try {
-      dispatch({ type: "DELIVER_REQUEST" });
-      const { data } = await axios.put(`/api/orders/${order._id}/deliver`, {});
-      dispatch({ type: "DELIVER_SUCCESS", payload: data });
-      toast.success("Order is delivered");
-    } catch (err) {
-      toast.error(getError(err));
-      dispatch({ type: "DELIVER_FAIL" });
-    }
-  }
 
   return loading ? (
     <LoadingBox></LoadingBox>
@@ -193,9 +140,16 @@ export default function OrderScreen() {
                 <strong>Address: </strong> {order.address}, {order.city},{" "}
                 {order.postal_code}, {order.country}
               </Card.Text>
-              {order.delivered ? (
+              {order.delivered && order.delivered_at ? (
                 <MessageBox variant="success">
                   Delivered at {order.delivered_at}
+                </MessageBox>
+              ) : (
+                <MessageBox variant="danger">Not Delivered</MessageBox>
+              )}
+              {order.paid && order.paid_at ? (
+                <MessageBox variant="success">
+                  Paid at {order.paid_at}
                 </MessageBox>
               ) : (
                 <MessageBox variant="danger">Not Delivered</MessageBox>
@@ -270,32 +224,6 @@ export default function OrderScreen() {
                     ${totalPrice}
                   </Row>
                 </ListGroup.Item>
-                {!order.isPaid && (
-                  <ListGroup.Item>
-                    {isPending ? (
-                      <LoadingBox />
-                    ) : (
-                      <div>
-                        <PayPalButtons
-                          createOrder={createOrder}
-                          onApprove={onApprove}
-                          onError={onError}
-                        ></PayPalButtons>
-                      </div>
-                    )}
-                    {loadingPay && <LoadingBox></LoadingBox>}
-                  </ListGroup.Item>
-                )}
-                {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
-                  <ListGroup.Item>
-                    {loadingDeliver && <LoadingBox></LoadingBox>}
-                    <div className="d-grid">
-                      <Button type="button" onClick={deliverOrderHandler}>
-                        Deliver Order
-                      </Button>
-                    </div>
-                  </ListGroup.Item>
-                )}
               </ListGroup>
             </Card.Body>
           </Card>

@@ -46,7 +46,6 @@ export default function ProfileScreen() {
       const { data } = await axios.patch(`/api/users/${id}`, {
         name,
         email,
-        //password,
       });
       dispatch({
         type: "UPDATE_SUCCESS",

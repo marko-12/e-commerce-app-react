@@ -143,10 +143,16 @@ export default function OrderListScreen() {
                       : null
                   )}
                 </td>
-                <td>{order.isPaid ? order.paidAt.substring(0, 10) : "No"}</td>
+                <td>
+                  {order.paid && order.paid_at
+                    ? order.paid_at.substring(0, 10)
+                    : "No"}
+                </td>
 
                 <td>
-                  {order.delivered ? order.delivered_at.substring(0, 10) : "No"}
+                  {order.delivered && order.delivered_at
+                    ? order.delivered_at.substring(0, 10)
+                    : "No"}
                 </td>
                 <td>
                   <Button

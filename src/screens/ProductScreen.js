@@ -68,7 +68,6 @@ function ProductScreen() {
         setImages((prevState) => [...prevState, { url: image.original_url }]);
       });
     }
-    console.log(images);
   }, [product]);
 
   useEffect(() => {

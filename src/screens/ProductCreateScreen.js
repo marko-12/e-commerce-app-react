@@ -64,7 +64,6 @@ export default function ProductCreateScreen() {
   const onFileChangeHandler = (e) => {
     e.preventDefault();
     setSelectedFiles(e.target.files);
-    console.log(e.target.files);
     //setSelectedFile(URL.createObjectURL(e.target.files[0]))
   };
 
