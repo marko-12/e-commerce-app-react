@@ -146,3 +146,30 @@ button.thumbnail {
 .horizontal-slider {
   left: -7px;
 }
+
+.PopUp {
+  position: fixed;
+
+  left: 25%;
+  top: 30%;
+
+  width: 50%;
+
+  border: 1px solid #011627;
+  border-radius: 1em;
+  box-shadow: -2px 5px 5px #fcc000;
+
+  background-color: #fdfffc;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  color: #011627;
+  z-index: 9999;
+}
+
+.during-popup {
+  background: linear-gradient(rgba(50, 50, 50, 0.1), rgba(100, 100, 100, 0.1));
+}

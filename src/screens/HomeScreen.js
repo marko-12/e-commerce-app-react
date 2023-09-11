@@ -1,4 +1,4 @@
-import { useContext, useEffect, useReducer } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -7,6 +7,8 @@ import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { Store } from "../Store";
+import { Container } from "react-bootstrap";
+import PopUp from "../components/PopUp";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -36,6 +38,9 @@ function HomeScreen() {
     cart: { shippingAddress },
   } = state;
 
+  const [popUp, setPopUp] = useState(false);
+  const duringPopUp = popUp ? " during-popup" : "";
+
   useEffect(() => {
     (async () => {
       dispatch({ type: "FETCH_REQUEST" });
@@ -51,7 +56,7 @@ function HomeScreen() {
   }, []);
 
   return (
-    <div>
+    <div className={duringPopUp}>
       <Helmet>
         <title>Home Screen</title>
       </Helmet>
@@ -63,13 +68,16 @@ function HomeScreen() {
         ) : error ? (
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
-          <Row>
-            {products.map((product) => (
-              <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
-                <Product product={product}></Product>
-              </Col>
-            ))}
-          </Row>
+          <Container>
+            {popUp && <PopUp setPopUp={setPopUp} className="center" />}
+            <Row>
+              {products.map((product) => (
+                <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
+                  <Product product={product} setPopUp={setPopUp}></Product>
+                </Col>
+              ))}
+            </Row>
+          </Container>
         )}
       </div>
     </div>

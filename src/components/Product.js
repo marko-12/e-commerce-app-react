@@ -1,14 +1,15 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Rating from "./Rating";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Store } from "../Store";
 import { toast } from "react-toastify";
+import { getError } from "../utils";
 
 function Product(props) {
-  const { product, image } = props;
+  const { product, setPopUp } = props;
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
@@ -27,6 +28,14 @@ function Product(props) {
       type: "CART_ADD_ITEM",
       payload: { ...item, quantity },
     });
+    setPopUp(true);
+    // if (window.confirm("Do you want to go to cart?")) {
+    //   try {
+    //     navigate(`/cart`);
+    //   } catch (err) {
+    //     getError(err);
+    //   }
+    // }
   };
 
   return (
