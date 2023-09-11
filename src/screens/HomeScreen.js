@@ -56,7 +56,7 @@ function HomeScreen() {
   }, []);
 
   return (
-    <div className={duringPopUp}>
+    <div>
       <Helmet>
         <title>Home Screen</title>
       </Helmet>
@@ -70,7 +70,7 @@ function HomeScreen() {
         ) : (
           <Container>
             {popUp && <PopUp setPopUp={setPopUp} className="center" />}
-            <Row>
+            <Row className={duringPopUp}>
               {products.map((product) => (
                 <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
                   <Product product={product} setPopUp={setPopUp}></Product>

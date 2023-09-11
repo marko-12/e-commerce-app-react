@@ -150,12 +150,12 @@ button.thumbnail {
 .PopUp {
   position: fixed;
 
-  left: 25%;
+  left: 35%;
   top: 30%;
 
-  width: 50%;
+  width: 30%;
 
-  border: 1px solid #011627;
+  border: 1px solid #fcc000;
   border-radius: 1em;
   box-shadow: -2px 5px 5px #fcc000;
 
@@ -171,5 +171,6 @@ button.thumbnail {
 }
 
 .during-popup {
-  background: linear-gradient(rgba(50, 50, 50, 0.1), rgba(100, 100, 100, 0.1));
+  /* background: linear-gradient(rgba(50, 50, 50, 0.7), rgba(100, 100, 100, 0.7)); */
+  opacity: 0.4;
 }

@@ -14,20 +14,26 @@ function PopUp(props) {
 
   return (
     <div className="PopUp">
-      {/* x close window */}
-      <button className="popup-x" onClick={() => setPopUp(false)}>
-        X
-      </button>
       <div className="pu-content-container">
-        <h1>Do yoo want to go to cart?</h1>
+        <h1>Go to cart?</h1>
       </div>
       {/* button controls */}
       <div className="pu-button-container">
-        <button onClick={() => yesButtonHandler()}> Yes </button>
-        <button onClick={() => setPopUp(false)}> No, continue shopping </button>
+        <button style={buttonStyle} onClick={() => yesButtonHandler()}>
+          Yes
+        </button>
+        <button style={buttonStyle} onClick={() => setPopUp(false)}>
+          No, continue shopping
+        </button>
       </div>
     </div>
   );
 }
+
+const buttonStyle = {
+  margin: "10px",
+  borderRadius: "7px",
+  backgroundColor: "#fcc000",
+};
 
 export default PopUp;
