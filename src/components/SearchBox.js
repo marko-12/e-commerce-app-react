@@ -34,47 +34,6 @@ export default function SearchBox() {
 
   const [myOptions, setMyOptions] = useState([]);
 
-  // function getData() {
-  //   // fetch data
-  //   fetch("/api/products")
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((res) => {
-  //       for (var i = 0; i < res.length; i++) {
-  //         if (!myOptions.some((obj) => obj.label == res[i].name)) {
-  //           // create an object with a label
-  //           let object = {
-  //             label: res[i].name,
-  //             usersName: res[i].name,
-  //           };
-  //           myOptions.push(object);
-  //         }
-  //       }
-  //       setMyOptions(myOptions);
-  //       console.log(myOptions);
-  //     });
-  // }
-
-  // function getData() {
-  //   // fetch data
-  //   const res = axios.get("/api/products");
-
-  //   for (var i = 0; i < res.length; i++) {
-  //     if (!myOptions.some((obj) => obj.label === res[i].name)) {
-  //       // create an object with a label
-  //       let object = {
-  //         label: res[i].name,
-  //         usersName: res[i].name,
-  //       };
-  //       myOptions.push(object);
-  //     }
-
-  //     setMyOptions(myOptions);
-  //     console.log(myOptions);
-  //   }
-  // }
-
   async function getData() {
     // fetch data
     try {

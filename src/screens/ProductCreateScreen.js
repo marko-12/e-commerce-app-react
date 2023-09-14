@@ -22,22 +22,34 @@ export default function ProductCreateScreen() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [images, setImages] = useState([]);
-  const [category, setCategory] = useState("");
+  const [category_id, setCategoryId] = useState(1);
+  const [categories, setCategories] = useState([]);
   const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get("/api/categories");
+        setCategories(data);
+      } catch (err) {
+        toast.error(getError(err));
+      }
+    })();
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("price", price);
-    formData.append("category", category);
     formData.append("brand", brand);
-    formData.append("count_in_stock", count_in_stock);
     formData.append("description", description);
+    formData.append("price", price);
+    formData.append("count_in_stock", count_in_stock);
+    formData.append("category_id", category_id);
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append("image[]", selectedFiles[i]);
     }
@@ -56,7 +68,6 @@ export default function ProductCreateScreen() {
       toast.success(data.message);
       navigate("/admin/products");
     } catch (err) {
-      console.log("catch");
       toast.error(getError(err));
     }
   };
@@ -104,14 +115,24 @@ export default function ProductCreateScreen() {
           <Form.Control type="file" multiple onChange={onFileChangeHandler} />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="category">
-          <Form.Label>Category</Form.Label>
-          <Form.Control
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          />
-        </Form.Group>
+        {categories && categories[0] && (
+          <Form.Group className="mb-3" controlId="category">
+            <Form.Label>Category</Form.Label>
+            <Form.Control
+              as="select"
+              onChange={(e) => setCategoryId(e.target.value)}
+              required
+            >
+              {categories.map((category, index) => {
+                return (
+                  <option key={index} value={category.id}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </Form.Control>
+          </Form.Group>
+        )}
         <Form.Group className="mb-3" controlId="brand">
           <Form.Label>Brand</Form.Label>
           <Form.Control

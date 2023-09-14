@@ -57,7 +57,10 @@ function App() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(`/api/categories`);
-        setCategories(data);
+        setCategories([]);
+        data.forEach((category) => {
+          setCategories((prevState) => [...prevState, category.name]);
+        });
       } catch (err) {
         toast.error(getError(err));
       }
@@ -89,7 +92,7 @@ function App() {
             </Button>
 
             <LinkContainer to="/">
-              <Navbar.Brand>Web Shop</Navbar.Brand>
+              <Navbar.Brand>Home</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
@@ -160,7 +163,10 @@ function App() {
           {categories.map((category) => (
             <Nav.Item key={category}>
               <LinkContainer
-                to={{ pathname: "/search", search: `category=${category}` }}
+                to={{
+                  pathname: "/search",
+                  search: `category=${category}`,
+                }}
                 onClick={() => setSidebarIsOpen(false)}
               >
                 <Nav.Link>{category}</Nav.Link>

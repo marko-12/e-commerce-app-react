@@ -84,7 +84,6 @@ export default function SearchScreen() {
     pages: 0,
     totalProducts: 0,
   });
-  //countProducts je zapravo products per page, totalProducts je ukupan broj proizvoda
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,7 +130,10 @@ export default function SearchScreen() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(`/api/categories`);
-        setCategories(data);
+        setCategories([]);
+        data.forEach((category) => {
+          setCategories((prevState) => [...prevState, category.name]);
+        });
       } catch (err) {
         toast.error(getError(err));
       }
@@ -185,26 +187,6 @@ export default function SearchScreen() {
           </div>
           <div>
             <h3>Price</h3>
-            {/* <ul>
-              <li>
-                <Link
-                  className={"all" === price ? "text-bold" : ""}
-                  to={getFilterUrl({ price: "all" })}
-                >
-                  Any
-                </Link>
-              </li>
-              {prices.map((p) => (
-                <li key={p.value}>
-                  <Link
-                    to={getFilterUrl({ price: p.value })}
-                    className={p.value === price ? "text-bold" : ""}
-                  >
-                    {p.name}
-                  </Link>
-                </li>
-              ))}
-            </ul> */}
             <ReactSlider
               className="horizontal-slider"
               thumbClassName="thumb"
@@ -238,18 +220,6 @@ export default function SearchScreen() {
               Show prices from {sliderValue[0]}$ to {sliderValue[1]}$
             </div>
             <br />
-            {/* <Link
-              style={{
-                backgroundColor: "#f0c040",
-                borderRadius: "7px",
-              }}
-              to={getFilterUrl({
-                priceFrom: sliderValue[0],
-                priceTo: sliderValue[1],
-              })}
-            >
-              Search Prices
-            </Link> */}
           </div>
           <div>
             <h3>Average Customer Review</h3>
@@ -311,7 +281,7 @@ export default function SearchScreen() {
                       : null}
                   </div>
                 </Col>
-                <Col className="text-end">
+                {/* <Col className="text-end">
                   Sort by{" "}
                   <select
                     value={order}
@@ -324,7 +294,7 @@ export default function SearchScreen() {
                     <option value="highest">Price: High to Low</option>
                     <option value="toprated">Avg. Customer Reviews</option>
                   </select>
-                </Col>
+                </Col> */}
               </Row>
               {products.length === 0 && (
                 <MessageBox>No Product Found</MessageBox>
@@ -341,6 +311,7 @@ export default function SearchScreen() {
               <div>
                 {[...Array(pages).keys()].map((x) => (
                   <LinkContainer
+                    style={{ margin: "5px", borderRadius: "10px" }}
                     key={x + 1}
                     className="mx-1"
                     to={{

@@ -58,10 +58,22 @@ export default function ProductEditScreen() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [images, setImages] = useState([]);
-  const [category, setCategory] = useState("");
+  const [category_id, setCategoryId] = useState("");
+  const [categories, setCategories] = useState([]);
   const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get("/api/categories");
+        setCategories(data);
+      } catch (err) {
+        toast.error(getError(err));
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +83,7 @@ export default function ProductEditScreen() {
         setName(data.product.name);
         setPrice(data.product.price);
         setImage(data.product.image);
-        setCategory(data.product.category);
+        setCategoryId(data.product.category_id);
         setCountInStock(data.product.count_in_stock);
         setBrand(data.product.brand);
         setDescription(data.product.description);
@@ -161,22 +173,22 @@ export default function ProductEditScreen() {
             {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
 
-          {/* <Form.Group className="mb-3" controlId="additionalImageFile">
-            <Form.Label>Upload Aditional Image</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={(e) => uploadFileHandler(e, true)}
-            />
-            {loadingUpload && <LoadingBox></LoadingBox>}
-          </Form.Group> */}
-
           <Form.Group className="mb-3" controlId="category">
             <Form.Label>Category</Form.Label>
             <Form.Control
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              as="select"
+              value={category_id}
+              onChange={(e) => setCategoryId(e.target.value)}
               required
-            />
+            >
+              {categories.map((category, index) => {
+                return (
+                  <option key={index} value={category.id}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </Form.Control>
           </Form.Group>
           <Form.Group className="mb-3" controlId="brand">
             <Form.Label>Brand</Form.Label>

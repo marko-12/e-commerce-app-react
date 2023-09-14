@@ -16,7 +16,6 @@ import { getError } from "../utils";
 import { Store } from "../Store";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toast } from "react-toastify";
-import { ListGroupItem } from "react-bootstrap";
 import SimpleImageSlider from "react-simple-image-slider";
 
 const reducer = (state, action) => {
@@ -47,6 +46,9 @@ function ProductScreen() {
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
+
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { cart, userInfo } = state;
 
   const [
     { loading, error, product, reviews, users, loadingCreateReview },
@@ -84,8 +86,6 @@ function ProductScreen() {
     fetchData();
   }, [id]);
 
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart, userInfo } = state;
   const addToCartHandler = async () => {
     const existItem = cart.cartItems.find((x) => x.id === product.id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
@@ -109,13 +109,11 @@ function ProductScreen() {
       return;
     }
     try {
-      const { data } = await axios.post(
-        `/api/products/${product.id}/review`,
-        { rating, comment, user_id: userInfo.id },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
-      );
+      const { data } = await axios.post(`/api/products/${product.id}/review`, {
+        rating,
+        comment,
+        //user_id: userInfo.id,
+      });
 
       dispatch({
         type: "CREATE_SUCCESS",

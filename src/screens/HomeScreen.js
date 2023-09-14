@@ -8,8 +8,7 @@ import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { Store } from "../Store";
 import { Container } from "react-bootstrap";
-import PopUp from "../components/PopUp";
-
+import Popup from "../components/Popup";
 const reducer = (state, action) => {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -69,7 +68,7 @@ function HomeScreen() {
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Container>
-            {popUp && <PopUp setPopUp={setPopUp} className="center" />}
+            {popUp && <Popup setPopUp={setPopUp} className="center" />}
             <Row className={duringPopUp}>
               {products.map((product) => (
                 <Col key={product.id} sm={6} md={4} lg={3} className="mb-3">
