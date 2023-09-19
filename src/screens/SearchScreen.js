@@ -91,7 +91,7 @@ export default function SearchScreen() {
         const queryParams = {
           page: page,
           name: name,
-          category: category,
+          category_id: category,
           priceFrom: priceFrom,
           priceTo: priceTo,
           rating: rating,
@@ -130,10 +130,7 @@ export default function SearchScreen() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(`/api/categories`);
-        setCategories([]);
-        data.forEach((category) => {
-          setCategories((prevState) => [...prevState, category.name]);
-        });
+        setCategories(data);
       } catch (err) {
         toast.error(getError(err));
       }
@@ -173,16 +170,19 @@ export default function SearchScreen() {
                   Any
                 </Link>
               </li>
-              {categories.map((c) => (
-                <li key={c}>
-                  <Link
-                    className={c === category ? "text-bold" : ""}
-                    to={getFilterUrl({ category: c })}
-                  >
-                    {c}
-                  </Link>
-                </li>
-              ))}
+
+              {categories.map((c, index) => {
+                return (
+                  <li key={index}>
+                    <Link
+                      className={c.id == category ? "text-bold" : ""}
+                      to={getFilterUrl({ category: c.id })}
+                    >
+                      {c.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div>
