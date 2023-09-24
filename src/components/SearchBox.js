@@ -35,10 +35,10 @@ export default function SearchBox() {
   const [myOptions, setMyOptions] = useState([]);
 
   async function getData() {
-    // fetch data
     try {
       const response = await axios.get("/api/products");
-      const res = await response.data;
+      const resp = await response.data;
+      const res = await resp.data;
       (async () => {
         for (var i = 0; i < res.length; i++) {
           if (!myOptions.some((obj) => obj.label == res[i].name)) {
@@ -82,7 +82,6 @@ export default function SearchBox() {
         autoComplete
         autoHighlight
         freeSolo
-        search
         clearOnEscape
         options={myOptions}
         renderInput={(data) => (

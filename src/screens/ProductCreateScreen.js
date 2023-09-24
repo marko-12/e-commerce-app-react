@@ -75,7 +75,6 @@ export default function ProductCreateScreen() {
   const onFileChangeHandler = (e) => {
     e.preventDefault();
     setSelectedFiles(e.target.files);
-    //setSelectedFile(URL.createObjectURL(e.target.files[0]))
   };
 
   const deleteFileHandler = async (fileName, f) => {

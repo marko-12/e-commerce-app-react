@@ -222,7 +222,7 @@ export default function SearchScreen() {
             <br />
           </div>
           <div>
-            <h3>Average Customer Review</h3>
+            <h3>Average Customer Rating</h3>
             <ul>
               {ratings.map((r) => (
                 <li key={r.name}>

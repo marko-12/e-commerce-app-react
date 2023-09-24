@@ -90,8 +90,7 @@ function ProductScreen() {
     const existItem = cart.cartItems.find((x) => x.id === product.id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product.id}`);
-    if (data[0].count_in_stock < quantity) {
-      //window.alert("Sorry. Product is out of stock");
+    if (data.product.count_in_stock < quantity) {
       toast.error("Sorry the product is out of stock");
       return;
     }
@@ -112,7 +111,6 @@ function ProductScreen() {
       const { data } = await axios.post(`/api/products/${product.id}/review`, {
         rating,
         comment,
-        //user_id: userInfo.id,
       });
 
       dispatch({
@@ -175,25 +173,8 @@ function ProductScreen() {
                 num_of_reviews={product.num_of_reviews}
               ></Rating>
             </ListGroup.Item>
-            <ListGroup.Item>Price : ${product.price}</ListGroup.Item>
-            <ListGroup.Item>
-              {/* <Row xs={1} md={2} className="g-2">
-                {[product.image, ...product.images].map((x) => (
-                  <Col key={x}>
-                    <Card>
-                      <Button
-                        className="thumbnail"
-                        type="button"
-                        variant="light"
-                        onClick={() => setSelectedImage(x)}
-                      >
-                        <Card.Img variant="top" src={x} alt="product" />
-                      </Button>
-                    </Card>
-                  </Col>
-                ))}
-              </Row> */}
-            </ListGroup.Item>
+            {/* <ListGroup.Item>Price : ${product.price}</ListGroup.Item> */}
+            {/* <ListGroup.Item></ListGroup.Item> */}
             <ListGroup.Item>
               Description:
               <p>{product.description}</p>
@@ -273,12 +254,12 @@ function ProductScreen() {
                   <option value="2">2- Fair</option>
                   <option value="3">3- Good</option>
                   <option value="4">4- Very good</option>
-                  <option value="5">5- Excelent</option>
+                  <option value="5">5- Excellent</option>
                 </Form.Select>
               </Form.Group>
               <FloatingLabel
                 controlId="floatingTextarea"
-                label="Comments"
+                label="Comment"
                 className="mb-3"
               >
                 <Form.Control
