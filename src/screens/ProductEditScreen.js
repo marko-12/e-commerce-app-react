@@ -56,13 +56,13 @@ export default function ProductEditScreen() {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
   const [images, setImages] = useState([]);
-  const [category_id, setCategoryId] = useState("");
+  const [category_id, setCategoryId] = useState(1);
   const [categories, setCategories] = useState([]);
   const [count_in_stock, setCountInStock] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -82,7 +82,7 @@ export default function ProductEditScreen() {
         const { data } = await axios.get(`/api/products/${productId}`);
         setName(data.product.name);
         setPrice(data.product.price);
-        setImage(data.product.image);
+        setImages(data.product.images);
         setCategoryId(data.product.category_id);
         setCountInStock(data.product.count_in_stock);
         setBrand(data.product.brand);
@@ -100,9 +100,25 @@ export default function ProductEditScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    // const formData = new FormData();
+    // formData.append("name", name);
+    // formData.append("brand", brand);
+    // formData.append("description", description);
+    // formData.append("price", price);
+    // formData.append("count_in_stock", count_in_stock);
+    // formData.append("category_id", category_id);
+    console.log(name);
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      const { data } = await axios.patch(`/api/products/${productId}`);
+      const { data } = await axios.patch(`/api/products/${productId}`, {
+        name,
+        brand,
+        description,
+        price,
+        count_in_stock,
+        category_id,
+      });
       dispatch({
         type: "UPDATE_SUCCESS",
       });
@@ -113,23 +129,46 @@ export default function ProductEditScreen() {
       dispatch({ type: "UPDATE_FAIL" });
     }
   };
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    const bodyFormData = new FormData();
-    bodyFormData.append("file", file);
+  // const uploadFileHandler = async (e) => {
+  //   const file = e.target.files[0];
+  //   const bodyFormData = new FormData();
+  //   bodyFormData.append("file", file);
+  //   try {
+  //     dispatch({ type: "UPLOAD_REQUEST" });
+  //     const { data } = await axios.post("/api/upload", bodyFormData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //         authorization: `Bearer ${userInfo.token}`,
+  //       },
+  //     });
+  //     dispatch({ type: "UPLOAD_SUCCESS" });
+  //     toast.success("Image uploaded successfully. click Update to apply it");
+  //   } catch (err) {
+  //     toast.error(getError(err));
+  //     dispatch({ type: "UPLOAD_FAIL", payload: getError(err) });
+  //   }
+  // };
+  const onFileChangeHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    console.log(e.target.files);
+    for (let i = 0; i < e.target.files.length; i++) {
+      formData.append("image[]", e.target.files[i]);
+    }
+
     try {
-      // dispatch({ type: "UPLOAD_REQUEST" });
-      // const { data } = await axios.post("/api/upload", bodyFormData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //     authorization: `Bearer ${userInfo.token}`,
-      //   },
-      // });
-      dispatch({ type: "UPLOAD_SUCCESS" });
-      toast.success("Image uploaded successfully. click Update to apply it");
+      dispatch({ type: "UPDATE_REQUEST" });
+      const { data } = await axios.post(
+        `/api/upload-image/${productId}`,
+        formData
+      );
+      dispatch({
+        type: "UPDATE_SUCCESS",
+      });
+      toast.success(data.message);
     } catch (err) {
       toast.error(getError(err));
-      dispatch({ type: "UPLOAD_FAIL", payload: getError(err) });
+      dispatch({ type: "UPDATE_FAIL" });
     }
   };
 
@@ -163,7 +202,7 @@ export default function ProductEditScreen() {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="imageFile">
+          {/* <Form.Group className="mb-3" controlId="imageFile">
             <Form.Label>Upload Image</Form.Label>
             <Form.Control
               type="file"
@@ -171,6 +210,15 @@ export default function ProductEditScreen() {
               onChange={uploadFileHandler}
             />
             {loadingUpload && <LoadingBox></LoadingBox>}
+          </Form.Group> */}
+          <Form.Group className="mb-3" controlId="imageFile">
+            <Form.Label>Upload Images</Form.Label>
+            <Form.Control
+              type="file"
+              // value={images ? images[0].original_url : ""}
+              multiple
+              onChange={onFileChangeHandler}
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="category">
@@ -211,7 +259,6 @@ export default function ProductEditScreen() {
             <Form.Control
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              required
             />
           </Form.Group>
           <div className="mb-3">

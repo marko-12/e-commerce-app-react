@@ -10,18 +10,21 @@ function AxiosInterceptor({ children }) {
   useEffect(() => {
     axios.interceptors.request.use(
       async (config) => {
-        if (config.url !== "/api/products") {
-          config.headers["Authorization"] = localStorage.getItem("token")
-            ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
-            : null;
-          config.headers["Accept"] = "application/json";
-          config.headers["Content-Type"] = "application/json";
-        } else {
+        const isUploadImageEndpoint = /\/api\/upload-image\/\d+/.test(
+          config.url
+        );
+        if (config.url == "/api/products" || isUploadImageEndpoint) {
           config.headers["Authorization"] = localStorage.getItem("token")
             ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
             : null;
           config.headers["Accept"] = "application/json";
           config.headers["Content-Type"] = "multipart/form-data";
+        } else {
+          config.headers["Authorization"] = localStorage.getItem("token")
+            ? `Bearer ${JSON.parse(localStorage.getItem("token")).access_token}`
+            : null;
+          config.headers["Accept"] = "application/json";
+          config.headers["Content-Type"] = "application/json";
         }
 
         return config;

@@ -63,15 +63,13 @@ export default function UserEditScreen() {
         });
       }
     })();
-    //fetchData();
   }, [userId, userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch({ type: "UPDATE_REQUEST" });
-      const { data } = await axios.patch(`/api/users/${userId}`, {
-        id: userId,
+      const { data } = await axios.patch(`/api/change-user/${userId}`, {
         name,
         email,
         isAdmin,

@@ -21,7 +21,6 @@ export default function ProductCreateScreen() {
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [images, setImages] = useState([]);
   const [category_id, setCategoryId] = useState(1);
   const [categories, setCategories] = useState([]);
   const [count_in_stock, setCountInStock] = useState("");
@@ -77,19 +76,12 @@ export default function ProductCreateScreen() {
     setSelectedFiles(e.target.files);
   };
 
-  const deleteFileHandler = async (fileName, f) => {
-    console.log(fileName, f);
-    console.log(images);
-    console.log(images.filter((x) => x !== fileName));
-    setImages(images.filter((x) => x !== fileName));
-    toast.success("Image removed successfully. click Update to apply it");
-  };
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Create Product</title>
+        <title>Create New Product</title>
       </Helmet>
-      <h1>Create Product {productId}</h1>
+      <h1>Create New Product {productId}</h1>
 
       <Form onSubmit={submitHandler}>
         <Form.Group className="mb-3" controlId="name">
@@ -110,7 +102,7 @@ export default function ProductCreateScreen() {
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="imageFile">
-          <Form.Label>Upload Image</Form.Label>
+          <Form.Label>Upload Images</Form.Label>
           <Form.Control type="file" multiple onChange={onFileChangeHandler} />
         </Form.Group>
 
@@ -154,7 +146,6 @@ export default function ProductCreateScreen() {
           <Form.Control
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
           />
         </Form.Group>
         <div className="mb-3">
