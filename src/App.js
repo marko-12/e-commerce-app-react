@@ -57,10 +57,12 @@ function App() {
     const fetchCategories = async () => {
       try {
         const { data } = await axios.get(`/api/categories`);
-        setCategories([]);
-        data.forEach((category) => {
-          setCategories((prevState) => [...prevState, category.name]);
-        });
+        // setCategories([]);
+        // data.forEach((category) => {
+        //   setCategories((prevState) => [...prevState, category.name]);
+        // });
+        const categoryNames = data.map((category) => category.name);
+        setCategories(categoryNames);
       } catch (err) {
         toast.error(getError(err));
       }
@@ -160,12 +162,12 @@ function App() {
           <Nav.Item>
             <strong>Categories</strong>
           </Nav.Item>
-          {categories.map((category) => (
-            <Nav.Item key={category}>
+          {categories.map((category, index) => (
+            <Nav.Item key={index}>
               <LinkContainer
                 to={{
                   pathname: "/search",
-                  search: `category=${category}`,
+                  search: `category=${index + 1}`,
                 }}
                 onClick={() => setSidebarIsOpen(false)}
               >
