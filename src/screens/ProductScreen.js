@@ -62,6 +62,8 @@ function ProductScreen() {
   });
 
   const [images, setImages] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     if (product.images) {
@@ -85,6 +87,27 @@ function ProductScreen() {
     };
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get(`/api/categories`);
+        setCategories(data);
+      } catch (err) {
+        toast.error(getError(err));
+      }
+    };
+    const findCategoryName = async () => {
+      categories.map((category) => {
+        if (category.id === product.category_id) {
+          setCategory(category.name);
+          return;
+        }
+      });
+    };
+    fetchCategories();
+    findCategoryName();
+  }, [product]);
 
   const addToCartHandler = async () => {
     const existItem = cart.cartItems.find((x) => x.id === product.id);
@@ -175,6 +198,9 @@ function ProductScreen() {
             </ListGroup.Item>
             {/* <ListGroup.Item>Price : ${product.price}</ListGroup.Item> */}
             {/* <ListGroup.Item></ListGroup.Item> */}
+
+            {category && <ListGroup.Item>Category: {category}</ListGroup.Item>}
+
             <ListGroup.Item>
               Description:
               <p>{product.description}</p>

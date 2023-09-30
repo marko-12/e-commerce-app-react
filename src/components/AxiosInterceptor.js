@@ -81,7 +81,13 @@ function AxiosInterceptor({ children }) {
         // }
 
         if (error.response.status === 403 || error.response.status === 401) {
-          if (originalRequest.url !== "/api/auth/login") {
+          const isPostReviewEndpoint = /\/api\/products\/\d+\/review/.test(
+            originalRequest.url
+          );
+          if (
+            originalRequest.url !== "/api/auth/login" &&
+            !isPostReviewEndpoint
+          ) {
             signoutHandler();
           }
         }

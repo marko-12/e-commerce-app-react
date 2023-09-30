@@ -40,7 +40,7 @@ export default function PlaceOrderScreen() {
   cart.itemsPrice = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
-  cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
+  cart.shippingPrice = cart.itemsPrice > 500 ? round2(0) : round2(50);
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice;
 
   var order_items = [];
@@ -59,7 +59,6 @@ export default function PlaceOrderScreen() {
         postal_code: cart.shippingAddress.postalCode,
         address: cart.shippingAddress.address,
         order_items: order_items,
-        user_id: userInfo.id,
       });
       ctxDispatch({ type: "CART_CLEAR" });
       dispatch({ type: "CREATE_SUCCESS" });

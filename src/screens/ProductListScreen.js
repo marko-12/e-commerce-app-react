@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Row from "react-bootstrap/Row";
@@ -78,6 +78,8 @@ export default function ProductListScreen() {
   const { state } = useContext(Store);
   const { userInfo } = state;
 
+  const [categoryNames, setCategoryNames] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -98,16 +100,25 @@ export default function ProductListScreen() {
     }
   }, [page, userInfo, successDelete]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get(`/api/categories`);
+        const catNames = data.map((category) => category.name);
+        setCategoryNames(catNames);
+      } catch (err) {
+        toast.error(getError(err));
+      }
+    };
+    fetchCategories();
+  }, [products]);
+
   const createHandler = async () => {
     if (window.confirm("Are you sure you want to create a new product?")) {
       try {
         navigate(`/admin/createproduct`);
       } catch (err) {
         getError(error);
-        // toast.error(getError(error));
-        // dispatch({
-        //   type: "CREATE_FAIL",
-        // });
       }
     }
   };
@@ -172,7 +183,7 @@ export default function ProductListScreen() {
                   <td>{product.id}</td>
                   <td>{product.name}</td>
                   <td>{product.price}$</td>
-                  <td>{product.category}</td>
+                  <td>{categoryNames[product.category_id - 1]}</td>
                   <td>{product.brand}</td>
                   <td>
                     <Button

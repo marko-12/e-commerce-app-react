@@ -75,7 +75,7 @@ export default function OrderScreen() {
       error,
       order,
       orderItems,
-      users,
+      user,
       successPay,
       loadingPay,
       loadingDeliver,
@@ -136,7 +136,7 @@ export default function OrderScreen() {
             <Card.Body>
               <Card.Title>Shipping</Card.Title>
               <Card.Text>
-                <strong>Name:</strong> {users.name} <br />
+                <strong>Name:</strong> {user.name} <br />
                 <strong>Address: </strong> {order.address}, {order.city},{" "}
                 {order.postal_code}, {order.country}
               </Card.Text>

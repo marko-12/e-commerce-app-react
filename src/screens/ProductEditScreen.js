@@ -101,14 +101,6 @@ export default function ProductEditScreen() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // const formData = new FormData();
-    // formData.append("name", name);
-    // formData.append("brand", brand);
-    // formData.append("description", description);
-    // formData.append("price", price);
-    // formData.append("count_in_stock", count_in_stock);
-    // formData.append("category_id", category_id);
-    console.log(name);
     try {
       dispatch({ type: "UPDATE_REQUEST" });
       const { data } = await axios.patch(`/api/products/${productId}`, {
@@ -151,7 +143,6 @@ export default function ProductEditScreen() {
   const onFileChangeHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    console.log(e.target.files);
     for (let i = 0; i < e.target.files.length; i++) {
       formData.append("image[]", e.target.files[i]);
     }
