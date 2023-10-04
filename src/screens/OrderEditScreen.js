@@ -67,8 +67,6 @@ function OrderEditScreen() {
         type: "UPDATE_SUCCESS",
       });
       toast.success(data.message);
-      console.log(data.delivered_at);
-      console.log(data.paid_at);
       navigate("/admin/orders");
     } catch (err) {
       dispatch({

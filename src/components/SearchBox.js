@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { createFilterOptions } from "@mui/material/Autocomplete";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
@@ -32,7 +33,11 @@ export default function SearchBox() {
     );
   };
 
-  const [myOptions, setMyOptions] = useState([]);
+  const [options, setOptions] = useState([]);
+  const OPTIONS_LIMIT = 3;
+  const filterOptions = createFilterOptions({
+    limit: OPTIONS_LIMIT,
+  });
 
   async function getData() {
     try {
@@ -41,23 +46,24 @@ export default function SearchBox() {
       const res = await resp.data;
       (async () => {
         for (var i = 0; i < res.length; i++) {
-          if (!myOptions.some((obj) => obj.label == res[i].name)) {
+          if (!options.some((obj) => obj.label == res[i].name)) {
             // create an object with a label
             let object = {
               label: res[i].name,
               usersName: res[i].name,
             };
-            myOptions.push(object);
+            options.push(object);
           }
         }
-        setMyOptions(myOptions);
+        setOptions(options);
       })();
     } catch (e) {
       navigate("/");
     }
   }
 
-  useEffect(() => getData, [myOptions]);
+  useEffect(() => getData, [options]);
+
   //useEffect(() => search(), [query]);
   return (
     // <Form className="d-flex me-auto">
@@ -79,11 +85,12 @@ export default function SearchBox() {
     <div>
       <Autocomplete
         style={{ width: 500, backgroundColor: "whitesmoke" }}
+        filterOptions={filterOptions}
         autoComplete
         autoHighlight
         freeSolo
         clearOnEscape
-        options={myOptions}
+        options={options}
         renderInput={(data) => (
           <TextField
             {...data}

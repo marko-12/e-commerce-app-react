@@ -131,7 +131,7 @@ export default function OrderListScreen() {
                       ? item.reduce(
                           (a, c) => a + c.pivot.quantity * c.price,
                           0
-                        ) > 100
+                        ) > 500
                         ? item.reduce(
                             (a, c) => a + c.pivot.quantity * c.price,
                             0
@@ -139,7 +139,7 @@ export default function OrderListScreen() {
                         : item.reduce(
                             (a, c) => a + c.pivot.quantity * c.price,
                             0
-                          ) + 10
+                          ) + 50
                       : null
                   )}
                 </td>
