@@ -160,7 +160,8 @@ export default function OrderScreen() {
             <Card.Body>
               <Card.Title>Payment</Card.Title>
               <Card.Text>
-                <strong>Method:</strong> {order.paymentMethod}
+                <strong>Method:</strong>{" "}
+                {order.pay_before_shipping ? "Before Arrival" : "On Arrival"}
               </Card.Text>
               {/* {order.isPaid ? (
                 <MessageBox variant="success">

@@ -49,6 +49,11 @@ export default function PlaceOrderScreen() {
     order_items.push(orderItem);
   });
 
+  console.log(cart.paymentMethod);
+
+  const pay_before_shipping =
+    cart.paymentMethod == "Before Arrival" ? true : false;
+
   const placeOrderHandler = async () => {
     try {
       dispatch({ type: "CREATE_REQUEST" });
@@ -59,6 +64,7 @@ export default function PlaceOrderScreen() {
         postal_code: cart.shippingAddress.postalCode,
         address: cart.shippingAddress.address,
         order_items: order_items,
+        pay_before_shipping: pay_before_shipping,
       });
       ctxDispatch({ type: "CART_CLEAR" });
       dispatch({ type: "CREATE_SUCCESS" });
@@ -75,6 +81,8 @@ export default function PlaceOrderScreen() {
     if (!cart.paymentMethod) {
       navigate("/payment");
     }
+    console.log(cart.paymentMethod);
+    console.log(pay_before_shipping);
   }, [cart, navigate]);
 
   return (

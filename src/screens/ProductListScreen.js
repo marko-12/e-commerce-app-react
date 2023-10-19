@@ -84,9 +84,8 @@ export default function ProductListScreen() {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          `/api/products_paginated/?page=${page}`
+          `/api/products_paginated?page=${page}`
         );
-
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         toast.error(getError(err));
