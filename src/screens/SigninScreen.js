@@ -16,7 +16,7 @@ export default function SigninScreen() {
   const redirect = redirectInUrl ? redirectInUrl : "/";
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); /////
+  const [password, setPassword] = useState("");
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo, token } = state;

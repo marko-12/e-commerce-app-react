@@ -6,7 +6,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Store } from "../Store";
 import { toast } from "react-toastify";
-import { getError } from "../utils";
+import { getError, groupNumberWithSeparator } from "../utils";
 
 function Product(props) {
   const { product, setPopUp } = props;
@@ -54,17 +54,22 @@ function Product(props) {
         <Link to={`/product/${product.id}`}>
           <Card.Title>{product.name}</Card.Title>
         </Link>
-        <Rating
+        {/* <Rating
           rating={product.rating}
           num_of_reviews={product.num_of_reviews}
-        />
-        <Card.Text>${product.price}</Card.Text>
+        /> */}
+        <Card.Text>
+          {groupNumberWithSeparator(product.price, ",")} rsd
+        </Card.Text>
         {product.count_in_stock <= 0 ? (
           <Button variant="light" disabled>
             Out of stock
           </Button>
         ) : (
-          <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
+          // <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
+          <Button variant="dark" disabled>
+            In stock
+          </Button>
         )}
       </Card.Body>
     </Card>

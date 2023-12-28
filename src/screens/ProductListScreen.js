@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { Store } from "../Store";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import { getError } from "../utils";
+import { getError, groupNumberWithSeparator } from "../utils";
 import { Helmet } from "react-helmet-async";
 
 const reducer = (state, action) => {
@@ -181,7 +181,7 @@ export default function ProductListScreen() {
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
-                  <td>{product.price}$</td>
+                  <td>{groupNumberWithSeparator(product.price, ",")} rsd</td>
                   <td>{categoryNames[product.category_id - 1]}</td>
                   <td>{product.brand}</td>
                   <td>

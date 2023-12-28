@@ -12,7 +12,7 @@ import Rating from "../components/Rating";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
-import { getError } from "../utils";
+import { getError, groupNumberWithSeparator } from "../utils";
 import { Store } from "../Store";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import { toast } from "react-toastify";
@@ -214,7 +214,9 @@ function ProductScreen() {
                 <ListGroup.Item>
                   <Row>
                     <Col>Price:</Col>
-                    <Col>${product.price}</Col>
+                    <Col>
+                      {groupNumberWithSeparator(product.price, ",")} rsd
+                    </Col>
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>

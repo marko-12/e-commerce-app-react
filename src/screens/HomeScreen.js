@@ -65,7 +65,7 @@ function HomeScreen() {
   return (
     <div>
       <Helmet>
-        <title>Home Screen</title>
+        <title>Mechatronic Shop</title>
       </Helmet>
       <h1 style={{ textAlign: "center" }}>Current Products</h1>
       <br />
