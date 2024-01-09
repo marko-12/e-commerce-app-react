@@ -14,6 +14,7 @@ function Product(props) {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
     cart: { cartItems },
+    language,
   } = state;
 
   const addToCartHandler = async (item) => {
@@ -29,13 +30,6 @@ function Product(props) {
       payload: { ...item, quantity },
     });
     setPopUp(true);
-    // if (window.confirm("Do you want to go to cart?")) {
-    //   try {
-    //     navigate(`/cart`);
-    //   } catch (err) {
-    //     getError(err);
-    //   }
-    // }
   };
 
   return (
@@ -46,6 +40,8 @@ function Product(props) {
             src={product.images[0].original_url}
             className="card-img-top"
             alt={product.name}
+            // height={"300rem"}
+            style={{ height: "25rem", width: "100%" }}
           />
         </Link>
       )}
@@ -62,13 +58,13 @@ function Product(props) {
           {groupNumberWithSeparator(product.price, ",")} rsd
         </Card.Text>
         {product.count_in_stock <= 0 ? (
-          <Button variant="light" disabled>
-            Out of stock
+          <Button variant="danger" disabled>
+            {language === "EN" ? "Unavailable" : "Nedostupno"}
           </Button>
         ) : (
           // <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
-          <Button variant="dark" disabled>
-            In stock
+          <Button variant="success" disabled>
+            {language === "EN" ? "In stock" : "Na lageru"}
           </Button>
         )}
       </Card.Body>

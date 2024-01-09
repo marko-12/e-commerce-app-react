@@ -36,10 +36,12 @@ import ForgetPasswordScreen from "./screens/ForgetPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import ProductCreateScreen from "./screens/ProductCreateScreen";
 import OrderEditScreen from "./screens/OrderEditScreen";
+import Flag_of_the_United_Kingdom from "./images/Flag_of_the_United_Kingdom.png";
+import Flag_of_Serbia from "./images/Flag_of_Serbia.png";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { fullBox, cart, userInfo } = state;
+  const { fullBox, cart, userInfo, language } = state;
 
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });
@@ -146,6 +148,35 @@ function App() {
                     </LinkContainer>
                   </NavDropdown>
                 )}
+                <NavDropdown
+                  title={
+                    language == "SR" ? (
+                      <img height="20rem" width="30rem" src={Flag_of_Serbia} />
+                    ) : (
+                      <img
+                        height="20rem"
+                        width="30rem"
+                        src={Flag_of_the_United_Kingdom}
+                      />
+                    )
+                  }
+                  id={"language-dropdown"}
+                >
+                  <NavDropdown.Item
+                    onClick={(e) =>
+                      ctxDispatch({ type: "SET_LANGUAGE", payload: "SR" })
+                    }
+                  >
+                    Srpski
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    onClick={(e) =>
+                      ctxDispatch({ type: "SET_LANGUAGE", payload: "EN" })
+                    }
+                  >
+                    English
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Nav>
             </Navbar.Collapse>
           </Container>

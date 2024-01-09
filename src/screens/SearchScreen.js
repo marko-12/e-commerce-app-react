@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { getError } from "../utils";
+import { getError, groupNumberWithSeparator } from "../utils";
 import { Helmet } from "react-helmet-async";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -72,6 +72,8 @@ export default function SearchScreen() {
   const page = sp.get("page") || 1;
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
+
+  const { language } = state;
 
   const [
     { loading, error, products, pages, perPage, totalProducts },
@@ -155,11 +157,13 @@ export default function SearchScreen() {
   return (
     <div>
       <Helmet>
-        <title>Search Products</title>
+        <title>
+          {language === "EN" ? "Search Products" : "Pretraga proizvoda"}
+        </title>
       </Helmet>
       <Row>
         <Col md={3}>
-          <h3>Category</h3>
+          <h3>{language === "EN" ? "Category" : "Kategorija"}</h3>
           <div>
             <ul>
               <li>
@@ -167,7 +171,7 @@ export default function SearchScreen() {
                   className={"all" === category ? "text-bold" : ""}
                   to={getFilterUrl({ category: "all" })}
                 >
-                  Any
+                  {language === "EN" ? "Any Category" : "Sve kategorije"}
                 </Link>
               </li>
 
@@ -186,16 +190,18 @@ export default function SearchScreen() {
             </ul>
           </div>
           <div>
-            <h3>Price</h3>
+            <h3>{language === "EN" ? "Price" : "Cena"}</h3>
             <ReactSlider
               className="horizontal-slider"
               thumbClassName="thumb"
               trackClassName="track"
-              defaultValue={[1, 1000]}
-              max={1000}
+              defaultValue={[1, 900000]}
+              max={1000000}
               min={1}
               renderThumb={(props, state) => (
-                <div {...props}>{state.valueNow}</div>
+                <div {...props}>
+                  {groupNumberWithSeparator(state.valueNow, ",")}
+                </div>
               )}
               onChange={(value) => setSliderValue(value)}
               onAfterChange={(value) =>
@@ -217,12 +223,20 @@ export default function SearchScreen() {
                 borderRadius: "7px",
               }}
             >
-              Show prices from {sliderValue[0]}$ to {sliderValue[1]}$
+              {language === "EN" ? "Show prices from" : "Pokazi cene od"}{" "}
+              {sliderValue[0] && groupNumberWithSeparator(sliderValue[0], ",")}{" "}
+              rsd {language === "EN" ? "to" : "do"}{" "}
+              {sliderValue[1] && groupNumberWithSeparator(sliderValue[1], ",")}{" "}
+              rsd
             </div>
             <br />
           </div>
           <div>
-            <h3>Average Customer Rating</h3>
+            <h3>
+              {language === "EN"
+                ? "Average Customer Rating"
+                : "Prosečna Ocena Korisnika"}
+            </h3>
             <ul>
               {ratings.map((r) => (
                 <li key={r.name}>
@@ -255,12 +269,27 @@ export default function SearchScreen() {
               <Row className="justify-content-between mb-3">
                 <Col md={6}>
                   <div>
-                    {totalProducts === 0 ? "No" : totalProducts} Results
-                    {name !== "all" && " : " + name}
-                    {category !== "all" && " : " + category}
-                    {priceFrom !== "all" &&
-                      priceFrom !== "all" &&
-                      " : Price From " + priceFrom + "$ to " + priceTo + "$"}
+                    {totalProducts === 0
+                      ? language === "EN"
+                        ? "No"
+                        : "Nema"
+                      : totalProducts}{" "}
+                    {totalProducts === 1
+                      ? language === "EN"
+                        ? "Product"
+                        : "Proizvod"
+                      : language === "EN"
+                      ? "Products"
+                      : "Proizvoda"}
+                    {/* {name !== "all" && " : " + name}
+                    {category !== "all" && " : " + category} */}
+                    {/* {priceFrom !== "all" &&
+                      priceTo !== "all" &&
+                      " : Price From " +
+                        priceFrom +
+                        " RSD to " +
+                        priceTo +
+                        " RSD"} */}
                     {rating !== "all" && " : Rating " + rating + " & up"}
                     {name !== "all" ||
                     category !== "all" ||
@@ -275,11 +304,11 @@ export default function SearchScreen() {
                     ) : null}
                   </div>
                   <br />
-                  <div>
+                  {/* <div>
                     {perPage && perPage > 0
                       ? `Showing ${perPage} products per page`
                       : null}
-                  </div>
+                  </div> */}
                 </Col>
                 {/* <Col className="text-end">
                   Sort by{" "}

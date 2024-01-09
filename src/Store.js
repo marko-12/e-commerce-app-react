@@ -4,6 +4,9 @@ export const Store = createContext();
 
 const initialState = {
   fullBox: false,
+  language: localStorage.getItem("language")
+    ? JSON.parse(localStorage.getItem("language"))
+    : "SR",
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
@@ -29,6 +32,9 @@ function reducer(state, action) {
       return { ...state, fullBox: true };
     case "SET_FULLBOX_OFF":
       return { ...state, fullBox: false };
+
+    case "SET_LANGUAGE":
+      return { ...state, language: action.payload };
 
     case "CART_ADD_ITEM":
       // add to cart

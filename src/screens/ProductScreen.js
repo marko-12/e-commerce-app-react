@@ -48,7 +48,7 @@ function ProductScreen() {
   const { id } = params;
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart, userInfo } = state;
+  const { cart, userInfo, language } = state;
 
   const [
     { loading, error, product, reviews, users, loadingCreateReview },
@@ -166,20 +166,22 @@ function ProductScreen() {
       <Row>
         {images[0] && (
           <Col md={6}>
-            {/* <img
+            <img
               className="img-large"
               src={product.images[0].original_url}
-              //src="https://www.sportvision.rs/files/images/slike_proizvoda/media/DM0/DM0829-001/images/DM0829-001.jpg"
               alt={product.name}
-            ></img> */}
-            <SimpleImageSlider
+              style={{ height: "30rem", width: "30rem" }}
+              // height={"30rem"}
+              // width={"30rem"}
+            ></img>
+            {/* <SimpleImageSlider
               width="30rem"
               height="30rem"
               images={images}
               showBullets={true}
               showNavs={true}
               autoPlay={true}
-            />
+            /> */}
           </Col>
         )}
         <Col md={3}>
@@ -199,10 +201,14 @@ function ProductScreen() {
             {/* <ListGroup.Item>Price : ${product.price}</ListGroup.Item> */}
             {/* <ListGroup.Item></ListGroup.Item> */}
 
-            {category && <ListGroup.Item>Category: {category}</ListGroup.Item>}
+            {category && (
+              <ListGroup.Item>
+                {language === "EN" ? "Category:" : "Kategorija:"} {category}
+              </ListGroup.Item>
+            )}
 
             <ListGroup.Item>
-              Description:
+              {language === "EN" ? "Description:" : "Opis proizvoda:"}
               <p>{product.description}</p>
             </ListGroup.Item>
           </ListGroup>
@@ -213,7 +219,7 @@ function ProductScreen() {
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <Row>
-                    <Col>Price:</Col>
+                    <Col>{language === "EN" ? "Price:" : "Cena:"}</Col>
                     <Col>
                       {groupNumberWithSeparator(product.price, ",")} rsd
                     </Col>
@@ -224,15 +230,19 @@ function ProductScreen() {
                     <Col>Status:</Col>
                     <Col>
                       {product.count_in_stock > 0 ? (
-                        <Badge bg="success">In Stock</Badge>
+                        <Badge bg="success">
+                          {language === "EN" ? "In Stock" : "Na lageru"}
+                        </Badge>
                       ) : (
-                        <Badge bg="danger">Unavailable</Badge>
+                        <Badge bg="danger">
+                          {language === "EN" ? "Unavailable" : "Nedostupno"}
+                        </Badge>
                       )}
                     </Col>
                   </Row>
                 </ListGroup.Item>
 
-                {product.count_in_stock > 0 && (
+                {/* {product.count_in_stock > 0 && (
                   <ListGroup.Item>
                     <div className="d-grid">
                       <Button onClick={addToCartHandler} variant="primary">
@@ -240,13 +250,13 @@ function ProductScreen() {
                       </Button>
                     </div>
                   </ListGroup.Item>
-                )}
+                )} */}
               </ListGroup>
             </Card.Body>
           </Card>
         </Col>
       </Row>
-      <div className="my-3">
+      {/* <div className="my-3">
         <h2 ref={reviewsRef}>Reviews</h2>
         <div className="mb-3">
           {product.num_of_reviews === 0 && (
@@ -315,7 +325,7 @@ function ProductScreen() {
             </MessageBox>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
