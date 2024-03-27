@@ -8,7 +8,7 @@ import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { Store } from "../Store";
 import { Container } from "react-bootstrap";
-import Popup from "../components/Popup";
+import Popup from "../components/PopUp";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const reducer = (state, action) => {
