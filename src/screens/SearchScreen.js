@@ -72,6 +72,7 @@ export default function SearchScreen() {
   const page = sp.get("page") || 1;
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { language } = state;
 
   const [
     { loading, error, products, pages, perPage, totalProducts },
@@ -155,11 +156,13 @@ export default function SearchScreen() {
   return (
     <div>
       <Helmet>
-        <title>Search Products</title>
+        <title>
+          {language === "SR" ? "Pretraga Proizvoda" : "Products Search"}
+        </title>
       </Helmet>
       <Row>
         <Col md={3}>
-          <h3>Category</h3>
+          <h3>{language === "SR" ? "Kategorije" : "Categories"}</h3>
           <div>
             <ul>
               <li>
@@ -186,7 +189,7 @@ export default function SearchScreen() {
             </ul>
           </div>
           <div>
-            <h3>Price</h3>
+            <h3>{language === "SR" ? "Cena" : "Price"}</h3>
             <ReactSlider
               className="horizontal-slider"
               thumbClassName="thumb"
@@ -213,15 +216,16 @@ export default function SearchScreen() {
             <br />
             <div
               style={{
-                backgroundColor: "#f0c040",
+                color: "white",
+                backgroundColor: "#224ff2",
                 borderRadius: "7px",
               }}
             >
-              Show prices from {sliderValue[0]}$ to {sliderValue[1]}$
+              Show prices from {sliderValue[0]} rsd to {sliderValue[1]} rsd
             </div>
             <br />
           </div>
-          <div>
+          {/* <div>
             <h3>Average Customer Rating</h3>
             <ul>
               {ratings.map((r) => (
@@ -243,7 +247,7 @@ export default function SearchScreen() {
                 </Link>
               </li>
             </ul>
-          </div>
+          </div> */}
         </Col>
         <Col md={9}>
           {loading ? (
@@ -255,7 +259,12 @@ export default function SearchScreen() {
               <Row className="justify-content-between mb-3">
                 <Col md={6}>
                   <div>
-                    {totalProducts === 0 ? "No" : totalProducts} Results
+                    {totalProducts === 0
+                      ? language === "SR"
+                        ? "Nema"
+                        : "No"
+                      : totalProducts}{" "}
+                    {language === "SR" ? "Rezultata" : "Results"}
                     {name !== "all" && " : " + name}
                     {category !== "all" && " : " + category}
                     {priceFrom !== "all" &&
@@ -277,7 +286,9 @@ export default function SearchScreen() {
                   <br />
                   <div>
                     {perPage && perPage > 0
-                      ? `Showing ${perPage} products per page`
+                      ? language === "SR"
+                        ? `Prikazuje ${perPage} proizvoda po stranici`
+                        : `Showing ${perPage} products per page`
                       : null}
                   </div>
                 </Col>

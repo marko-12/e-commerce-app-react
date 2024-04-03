@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -10,6 +10,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { createFilterOptions } from "@mui/material/Autocomplete";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { Store } from "../Store";
 
 export default function SearchBox() {
   const navigate = useNavigate();
@@ -38,6 +39,9 @@ export default function SearchBox() {
   const filterOptions = createFilterOptions({
     limit: OPTIONS_LIMIT,
   });
+
+  const { state, dispatch: ctxDispatch } = useContext(Store);
+  const { language } = state;
 
   async function getData() {
     try {
@@ -95,7 +99,10 @@ export default function SearchBox() {
           <TextField
             {...data}
             variant="outlined"
-            label="Search Products"
+            label={language === "SR" ? "Pretraži Proizvode" : "Search Products"}
+            InputLabelProps={{
+              style: { color: "#224ff2" },
+            }}
             onChange={(e) => searchHandler(e)}
             onSelect={(e) => searchHandler(e)}
           />

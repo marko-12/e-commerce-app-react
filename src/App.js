@@ -36,10 +36,12 @@ import ForgetPasswordScreen from "./screens/ForgetPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import ProductCreateScreen from "./screens/ProductCreateScreen";
 import OrderEditScreen from "./screens/OrderEditScreen";
+import LanguageSelector from "./components/LanguageSelector";
+import { rgbToHex } from "@mui/material";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { fullBox, cart, userInfo } = state;
+  const { fullBox, cart, userInfo, language } = state;
 
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });
@@ -84,7 +86,10 @@ function App() {
     >
       <ToastContainer position="bottom-center" limit={1} />
       <header>
-        <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar
+          style={{ color: "white", backgroundColor: "#224ff2" }}
+          expand="lg"
+        >
           <Container>
             <Button
               variant="dark"
@@ -94,12 +99,13 @@ function App() {
             </Button>
 
             <LinkContainer to="/">
-              <Navbar.Brand>Mechatronic</Navbar.Brand>
+              <Navbar.Brand>Mechatronic Shop</Navbar.Brand>
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <SearchBox />
               <Nav className="me-auto  w-100  justify-content-end">
+                <LanguageSelector></LanguageSelector>
                 <Link to="/cart" className="nav-link">
                   Cart
                   {cart.cartItems.length > 0 && (

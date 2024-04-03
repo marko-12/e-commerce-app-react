@@ -43,6 +43,7 @@ function HomeScreen() {
   const { state } = useContext(Store);
   const {
     cart: { shippingAddress },
+    language,
   } = state;
 
   const [popUp, setPopUp] = useState(false);
@@ -67,7 +68,9 @@ function HomeScreen() {
       <Helmet>
         <title>Mechatronic Shop</title>
       </Helmet>
-      <h1 style={{ textAlign: "center" }}>Current Products</h1>
+      <h1 style={{ textAlign: "center" }}>
+        {language == "SR" ? "Trenutni Proizvodi" : "Current Products"}
+      </h1>
       <br />
       <div className="products">
         {loading ? (

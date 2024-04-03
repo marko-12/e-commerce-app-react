@@ -4,6 +4,9 @@ export const Store = createContext();
 
 const initialState = {
   fullBox: false,
+  language: localStorage.getItem("language")
+    ? JSON.parse(localStorage.getItem("language"))
+    : "SR",
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
@@ -25,6 +28,9 @@ const initialState = {
 };
 function reducer(state, action) {
   switch (action.type) {
+    case "SET_LANGUAGE":
+      localStorage.setItem("language", JSON.stringify(action.payload));
+      return { ...state, language: action.payload };
     case "SET_FULLBOX_ON":
       return { ...state, fullBox: true };
     case "SET_FULLBOX_OFF":
