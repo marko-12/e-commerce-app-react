@@ -36,6 +36,9 @@ function reducer(state, action) {
     case "SET_FULLBOX_OFF":
       return { ...state, fullBox: false };
 
+    case "SET_LANGUAGE":
+      return { ...state, language: action.payload };
+
     case "CART_ADD_ITEM":
       // add to cart
       const newItem = action.payload;

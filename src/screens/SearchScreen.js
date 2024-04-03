@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { getError } from "../utils";
+import { getError, groupNumberWithSeparator } from "../utils";
 import { Helmet } from "react-helmet-async";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -170,7 +170,7 @@ export default function SearchScreen() {
                   className={"all" === category ? "text-bold" : ""}
                   to={getFilterUrl({ category: "all" })}
                 >
-                  Any
+                  {language === "EN" ? "Any Category" : "Sve kategorije"}
                 </Link>
               </li>
 
@@ -194,11 +194,13 @@ export default function SearchScreen() {
               className="horizontal-slider"
               thumbClassName="thumb"
               trackClassName="track"
-              defaultValue={[1, 1000]}
-              max={1000}
+              defaultValue={[1, 900000]}
+              max={1000000}
               min={1}
               renderThumb={(props, state) => (
-                <div {...props}>{state.valueNow}</div>
+                <div {...props}>
+                  {groupNumberWithSeparator(state.valueNow, ",")}
+                </div>
               )}
               onChange={(value) => setSliderValue(value)}
               onAfterChange={(value) =>
@@ -284,13 +286,13 @@ export default function SearchScreen() {
                     ) : null}
                   </div>
                   <br />
-                  <div>
+                  {/* <div>
                     {perPage && perPage > 0
                       ? language === "SR"
                         ? `Prikazuje ${perPage} proizvoda po stranici`
                         : `Showing ${perPage} products per page`
                       : null}
-                  </div>
+                  </div> */}
                 </Col>
                 {/* <Col className="text-end">
                   Sort by{" "}

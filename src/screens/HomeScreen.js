@@ -44,6 +44,7 @@ function HomeScreen() {
   const {
     cart: { shippingAddress },
     language,
+    language,
   } = state;
 
   const [popUp, setPopUp] = useState(false);
