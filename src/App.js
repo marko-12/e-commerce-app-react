@@ -42,7 +42,6 @@ import { rgbToHex } from "@mui/material";
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { fullBox, cart, userInfo, language } = state;
-  const { fullBox, cart, userInfo, language } = state;
 
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });
