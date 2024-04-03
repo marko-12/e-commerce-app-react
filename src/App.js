@@ -38,6 +38,8 @@ import ProductCreateScreen from "./screens/ProductCreateScreen";
 import OrderEditScreen from "./screens/OrderEditScreen";
 import LanguageSelector from "./components/LanguageSelector";
 import { rgbToHex } from "@mui/material";
+import Flag_of_Serbia from "./images/Flag_of_Serbia.png";
+import Flag_of_the_United_Kingdom from "./images/Flag_of_the_United_Kingdom.png";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -152,35 +154,7 @@ function App() {
                     </LinkContainer>
                   </NavDropdown>
                 )}
-                <NavDropdown
-                  title={
-                    language == "SR" ? (
-                      <img height="20rem" width="30rem" src={Flag_of_Serbia} />
-                    ) : (
-                      <img
-                        height="20rem"
-                        width="30rem"
-                        src={Flag_of_the_United_Kingdom}
-                      />
-                    )
-                  }
-                  id={"language-dropdown"}
-                >
-                  <NavDropdown.Item
-                    onClick={(e) =>
-                      ctxDispatch({ type: "SET_LANGUAGE", payload: "SR" })
-                    }
-                  >
-                    Srpski
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    onClick={(e) =>
-                      ctxDispatch({ type: "SET_LANGUAGE", payload: "EN" })
-                    }
-                  >
-                    English
-                  </NavDropdown.Item>
-                </NavDropdown>
+                <LanguageSelector></LanguageSelector>
               </Nav>
             </Navbar.Collapse>
           </Container>

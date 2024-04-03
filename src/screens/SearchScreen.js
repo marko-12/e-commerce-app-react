@@ -195,7 +195,7 @@ export default function SearchScreen() {
               thumbClassName="thumb"
               trackClassName="track"
               defaultValue={[1, 900000]}
-              max={1000000}
+              max={999999}
               min={1}
               renderThumb={(props, state) => (
                 <div {...props}>
@@ -218,12 +218,18 @@ export default function SearchScreen() {
             <br />
             <div
               style={{
-                color: "white",
-                backgroundColor: "#224ff2",
+                color: "black",
+                backgroundColor: "white",
                 borderRadius: "7px",
               }}
             >
-              Show prices from {sliderValue[0]} rsd to {sliderValue[1]} rsd
+              {language === "SR"
+                ? `Prikaži cene od ${sliderValue[0] || 1} rsd do ${
+                    sliderValue[1] || 900000
+                  } rsd`
+                : `Show prices from ${sliderValue[0] || 1} rsd to ${
+                    sliderValue[1] || 900000
+                  } rsd`}
             </div>
             <br />
           </div>
