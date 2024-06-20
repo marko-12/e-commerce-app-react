@@ -41,7 +41,7 @@ function Product(props) {
             className="card-img-top"
             alt={product.name}
             // height={"300rem"}
-            style={{ height: "25rem", width: "100%" }}
+            style={{ height: "100%", width: "100%" }}
           />
         </Link>
       )}
