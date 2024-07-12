@@ -171,8 +171,7 @@ function ProductScreen() {
               src={product.images[0].original_url}
               alt={product.name}
               style={{ height: "30rem", width: "30rem" }}
-              // height={"30rem"}
-              // width={"30rem"}
+              //style={{ height: "100%", width: "100%" }}
             ></img>
             {/* <SimpleImageSlider
               width="30rem"

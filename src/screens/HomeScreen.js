@@ -90,6 +90,15 @@ function HomeScreen() {
               </Row>
             </Container>
             <div>
+              <Link
+                className={page - 1 === Number(page) ? "btn text-bold" : "btn"}
+                key={page - 1}
+                to={`/?page=${Number(page) - 1}`}
+              >
+                Previous Page
+              </Link>
+            </div>
+            <div>
               {[...Array(pages).keys()].map((x) => (
                 <Link
                   className={x + 1 === Number(page) ? "btn text-bold" : "btn"}
@@ -99,6 +108,15 @@ function HomeScreen() {
                   {x + 1}
                 </Link>
               ))}
+            </div>
+            <div>
+              <Link
+                className={page + 1 === Number(page) ? "btn text-bold" : "btn"}
+                key={page + 1}
+                to={`/?page=${Number(page) + 1}`}
+              >
+                Next Page
+              </Link>
             </div>
           </>
         )}

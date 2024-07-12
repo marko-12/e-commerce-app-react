@@ -37,6 +37,7 @@ import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import ProductCreateScreen from "./screens/ProductCreateScreen";
 import OrderEditScreen from "./screens/OrderEditScreen";
 import LanguageSelector from "./components/LanguageSelector";
+import ContactScreen from "./screens/ContactScreen";
 import { rgbToHex } from "@mui/material";
 import Flag_of_Serbia from "./images/Flag_of_Serbia.png";
 import Flag_of_the_United_Kingdom from "./images/Flag_of_the_United_Kingdom.png";
@@ -93,12 +94,14 @@ function App() {
           expand="lg"
         >
           <Container>
-            <Button
+            {/* <Button
               variant="dark"
               onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
             >
               <i className="fas fa-bars"></i>
-            </Button>
+            </Button> */}
+
+            {/* Sklonjen Button za Sidebar kategorije */}
 
             <LinkContainer to="/">
               <Navbar.Brand>Mechatronic Shop</Navbar.Brand>
@@ -119,13 +122,21 @@ function App() {
                 {userInfo ? (
                   <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
                     <LinkContainer to="/profile">
-                      <NavDropdown.Item>User Profile</NavDropdown.Item>
+                      <NavDropdown.Item>
+                        {language === "SR"
+                          ? "Korisnički Profil"
+                          : "User Profile"}
+                      </NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to="/orderhistory">
+                    {/* <LinkContainer to="/orderhistory">
                       <NavDropdown.Item>Order History</NavDropdown.Item>
-                    </LinkContainer>
+                    </LinkContainer> */}
                     <LinkContainer to="/reset-password">
-                      <NavDropdown.Item>Reset Password</NavDropdown.Item>
+                      <NavDropdown.Item>
+                        {language === "SR"
+                          ? "Resetuj Password"
+                          : "Reset Password"}
+                      </NavDropdown.Item>
                     </LinkContainer>
                     <NavDropdown.Divider />
                     <Link
@@ -133,7 +144,7 @@ function App() {
                       to="#signout"
                       onClick={signoutHandler}
                     >
-                      Sign Out
+                      {language === "SR" ? "Odjava" : "Sign Out"}
                     </Link>
                   </NavDropdown>
                 ) : (
@@ -154,6 +165,9 @@ function App() {
                     </LinkContainer>
                   </NavDropdown>
                 )}
+                <Link className="nav-link" to="/contact">
+                  {language === "SR" ? "Kontakt" : "Contact"}
+                </Link>
                 <LanguageSelector></LanguageSelector>
               </Nav>
             </Navbar.Collapse>
@@ -195,6 +209,7 @@ function App() {
             <Route path="/signin" element={<SigninScreen />} />
             <Route path="/signup" element={<SignupScreen />} />
             <Route path="/forget-password" element={<ForgetPasswordScreen />} />
+            <Route path="/contact" element={<ContactScreen />} />
             <Route
               path="/reset-password" //sklonjen :token
               element={<ResetPasswordScreen />}
